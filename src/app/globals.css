@@ -1,0 +1,240 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-green: #0C3323;
+    --brand-green-deep: #04150E;
+    --brand-gold: #E4B32C;
+    --brand-cream: #FBF6EC;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    @apply bg-cream-100 text-forest-900 antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--brand-gold);
+    color: var(--brand-green-deep);
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Elegant scrollbar */
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: #0C3323; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #E4B32C, #8C5D12);
+    border-radius: 999px;
+    border: 3px solid #0C3323;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-gold);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  /* ---------- Decorative African-inspired patterns ---------- */
+
+  /* Kente / mudcloth inspired chevron band — used for separators */
+  .pattern-chevron {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28' viewBox='0 0 56 28'%3E%3Cpath d='M0 28L14 0l14 28L42 0l14 28' fill='none' stroke='%23E4B32C' stroke-width='2' stroke-opacity='.5'/%3E%3C/svg%3E");
+    background-size: 56px 28px;
+  }
+
+  /* Subtle diamond lattice for large dark surfaces */
+  .pattern-diamond {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23E4B32C' stroke-opacity='.10' stroke-width='1.2'%3E%3Cpath d='M30 2 58 30 30 58 2 30z'/%3E%3Cpath d='M30 16 44 30 30 44 16 30z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 60px 60px;
+  }
+
+  /* Woven basket texture for cream surfaces */
+  .pattern-weave {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%237A5130' stroke-opacity='.10' stroke-width='1'%3E%3Cpath d='M0 20h40M20 0v40'/%3E%3Cpath d='M0 0l40 40M40 0L0 40' stroke-opacity='.05'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 40px 40px;
+  }
+
+  /* Triangle frieze used above footers / below heroes */
+  .pattern-frieze {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cpath d='M0 16 8 0l8 16L24 0l8 16z' fill='%23E4B32C' fill-opacity='.35'/%3E%3C/svg%3E");
+    background-size: 32px 16px;
+    background-repeat: repeat-x;
+  }
+
+  /* ---------- Surfaces ---------- */
+
+  .surface-dark {
+    @apply relative bg-forest-900 text-cream-100;
+  }
+
+  .card-premium {
+    @apply relative overflow-hidden rounded-2xl border border-earth-200/70 bg-cream-50 shadow-card
+      transition-all duration-500;
+  }
+  .card-premium:hover {
+    @apply -translate-y-1 border-gold-300 shadow-gold;
+  }
+
+  .card-dark {
+    @apply relative overflow-hidden rounded-2xl border border-gold-500/25 bg-forest-800/70
+      shadow-deep backdrop-blur-sm transition-all duration-500;
+  }
+  .card-dark:hover {
+    @apply -translate-y-1 border-gold-400/60;
+  }
+
+  /* ---------- Type ---------- */
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase
+      tracking-[0.28em] text-gold-600;
+  }
+  .eyebrow-light {
+    @apply inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase
+      tracking-[0.28em] text-gold-300;
+  }
+
+  .gold-text {
+    @apply bg-gold-sheen bg-clip-text text-transparent;
+    background-size: 200% auto;
+  }
+
+  .heading-xl {
+    @apply font-display text-4xl leading-[1.08] sm:text-5xl lg:text-6xl;
+  }
+  .heading-lg {
+    @apply font-display text-3xl leading-[1.12] sm:text-4xl lg:text-[2.9rem];
+  }
+  .heading-md {
+    @apply font-display text-2xl leading-tight sm:text-3xl;
+  }
+
+  /* ---------- Buttons ---------- */
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm
+      font-semibold tracking-wide transition-all duration-300 disabled:cursor-not-allowed
+      disabled:opacity-60;
+    min-height: 44px;
+  }
+
+  .btn-gold {
+    @apply btn text-forest-950 shadow-gold;
+    background-image: linear-gradient(103deg, #B07A13 0%, #E4B32C 22%, #F4DE8C 46%, #E4B32C 70%, #B07A13 100%);
+    background-size: 200% auto;
+  }
+  .btn-gold:hover {
+    background-position: 90% center;
+    @apply -translate-y-0.5 shadow-gold-strong;
+  }
+
+  .btn-outline-gold {
+    @apply btn border border-gold-400/70 text-gold-200 hover:bg-gold-400/12 hover:text-gold-100;
+  }
+
+  .btn-forest {
+    @apply btn bg-forest-800 text-cream-100 hover:bg-forest-700 hover:-translate-y-0.5;
+  }
+
+  .btn-outline-forest {
+    @apply btn border border-forest-700/35 text-forest-800 hover:border-forest-700 hover:bg-forest-900 hover:text-cream-100;
+  }
+
+  .btn-whatsapp {
+    @apply btn bg-[#1FA855] text-white hover:bg-[#199348] hover:-translate-y-0.5;
+  }
+
+  /* ---------- Misc ---------- */
+
+  .gold-rule {
+    @apply h-px w-full border-0;
+    background: linear-gradient(90deg, transparent, rgba(228, 179, 44, 0.55), transparent);
+  }
+
+  .lift-img {
+    @apply transition-transform duration-[900ms] ease-out will-change-transform;
+  }
+  .group:hover .lift-img {
+    @apply scale-[1.07];
+  }
+
+  .prose-brand {
+    @apply text-[1.0625rem] leading-[1.85] text-forest-800/90;
+  }
+  .prose-brand h2 {
+    @apply mt-12 mb-4 font-display text-2xl text-forest-900 sm:text-3xl;
+  }
+  .prose-brand h3 {
+    @apply mt-9 mb-3 font-display text-xl text-forest-900;
+  }
+  .prose-brand p { @apply mb-5; }
+  .prose-brand ul { @apply mb-6 space-y-2.5 pl-1; }
+  .prose-brand ul li {
+    @apply relative pl-6;
+  }
+  .prose-brand ul li::before {
+    content: '';
+    @apply absolute left-0 top-[0.72em] h-1.5 w-1.5 rotate-45 bg-gold-500;
+  }
+  .prose-brand ol { @apply mb-6 list-decimal space-y-2.5 pl-6 marker:font-semibold marker:text-gold-600; }
+  .prose-brand a { @apply font-medium text-forest-700 underline decoration-gold-400 underline-offset-4 hover:text-gold-700; }
+  .prose-brand blockquote {
+    @apply my-8 border-l-2 border-gold-400 bg-cream-200/60 py-4 pl-6 pr-4 font-serif text-lg italic text-forest-800;
+  }
+  .prose-brand img { @apply my-8 rounded-xl; }
+  .prose-brand strong { @apply font-semibold text-forest-900; }
+  .prose-brand hr { @apply my-10 border-0 gold-rule; }
+
+  /* Admin field styling */
+  .field {
+    @apply w-full rounded-lg border border-earth-200 bg-white px-3.5 py-2.5 text-sm text-forest-900
+      shadow-sm outline-none transition placeholder:text-forest-900/35
+      focus:border-gold-400 focus:ring-2 focus:ring-gold-300/45;
+  }
+  .label {
+    @apply mb-1.5 block text-[0.78rem] font-semibold uppercase tracking-wider text-forest-800/70;
+  }
+}
+
+@layer utilities {
+  .text-shadow-deep {
+    text-shadow: 0 2px 28px rgba(4, 21, 14, 0.85), 0 1px 3px rgba(4, 21, 14, 0.6);
+  }
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
