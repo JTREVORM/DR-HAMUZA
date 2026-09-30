@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/env';
 import type { SiteSettings } from '@/lib/types';
-import { absoluteUrl } from '@/lib/utils';
+import { absoluteUrl, internationalPhone } from '@/lib/utils';
 
 interface BuildMetadataArgs {
   settings: SiteSettings;
@@ -72,6 +72,15 @@ export function localBusinessSchema(settings: SiteSettings) {
     settings.twitter_url,
   ].filter(Boolean);
 
+  // `location` defaults to the country, and "Uganda" is not a locality — writing
+  // it into addressLocality would be structured data that says something untrue.
+  // No street address or coordinates were supplied, so none are invented here;
+  // set `location` to the real town in Site Settings and it appears.
+  const locality =
+    settings.location && settings.location.trim().toLowerCase() !== 'uganda'
+      ? settings.location.trim()
+      : '';
+
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -79,14 +88,18 @@ export function localBusinessSchema(settings: SiteSettings) {
     name: settings.site_name,
     description: settings.short_description,
     url: SITE_URL,
-    telephone: settings.phone,
-    image: absoluteUrl(SITE_URL, settings.logo_url || '/brand/logo.webp'),
+    telephone: internationalPhone(settings.phone),
+    image: [
+      absoluteUrl(SITE_URL, '/images/dr-salongo-hamuza-traditional-healer-uganda.webp'),
+      absoluteUrl(SITE_URL, '/images/traditional-herbs-uganda.webp'),
+      absoluteUrl(SITE_URL, '/images/dr-salongo-hamuza-traditional-practice.webp'),
+    ],
     logo: absoluteUrl(SITE_URL, settings.logo_url || '/brand/logo.webp'),
     ...(settings.email ? { email: settings.email } : {}),
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'UG',
-      ...(settings.location ? { addressLocality: settings.location } : {}),
+      ...(locality ? { addressLocality: locality } : {}),
     },
     areaServed: { '@type': 'Country', name: 'Uganda' },
     ...(sameAs.length ? { sameAs } : {}),
@@ -99,6 +112,14 @@ export function localBusinessSchema(settings: SiteSettings) {
 }
 
 export function personSchema(settings: SiteSettings) {
+  const sameAs = [
+    settings.facebook_url,
+    settings.instagram_url,
+    settings.tiktok_url,
+    settings.youtube_url,
+    settings.twitter_url,
+  ].filter(Boolean);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -107,9 +128,12 @@ export function personSchema(settings: SiteSettings) {
     jobTitle: settings.tagline,
     description: settings.short_description,
     url: `${SITE_URL}/about`,
-    image: absoluteUrl(SITE_URL, settings.logo_url || '/brand/logo.webp'),
-    telephone: settings.phone,
+    // A photograph of him, not the logo — the Person is the man.
+    image: absoluteUrl(SITE_URL, '/images/dr-salongo-hamuza-portrait.webp'),
+    telephone: internationalPhone(settings.phone),
+    nationality: { '@type': 'Country', name: 'Uganda' },
     worksFor: { '@id': `${SITE_URL}/#business` },
+    ...(sameAs.length ? { sameAs } : {}),
   };
 }
 
@@ -158,23 +182,93 @@ export function articleSchema(args: {
   };
 }
 
+/**
+ * `VideoObject` for a single video page.
+ *
+ * `contentUrl` is the media file itself and `embedUrl` is a player — they are
+ * not interchangeable, so a self-hosted MP4 is only ever given as `contentUrl`
+ * and an external provider only ever as `embedUrl`. Everything optional is left
+ * out entirely when we do not have a real value for it.
+ */
 export function videoSchema(args: {
+  settings: SiteSettings;
   name: string;
   description: string;
+  pageUrl: string;
   thumbnailUrl?: string;
   uploadDate?: string | null;
+  duration?: string;
   embedUrl?: string;
   contentUrl?: string;
 }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
+    '@id': `${absoluteUrl(SITE_URL, args.pageUrl)}#video`,
     name: args.name,
     description: args.description,
+    url: absoluteUrl(SITE_URL, args.pageUrl),
     ...(args.thumbnailUrl ? { thumbnailUrl: [args.thumbnailUrl] } : {}),
     ...(args.uploadDate ? { uploadDate: args.uploadDate } : {}),
+    ...(args.duration ? { duration: args.duration } : {}),
     ...(args.embedUrl ? { embedUrl: args.embedUrl } : {}),
     ...(args.contentUrl ? { contentUrl: args.contentUrl } : {}),
+    creator: { '@id': `${SITE_URL}/#person` },
+    publisher: { '@id': `${SITE_URL}/#business` },
+    inLanguage: 'en',
+    isFamilyFriendly: true,
+  };
+}
+
+/**
+ * FAQ markup. Only ever generated from questions and answers that are visibly
+ * rendered on the same page — Google requires it, and marking up anything else
+ * would be misleading.
+ */
+export function faqSchema(faqs: Array<{ question: string; answer: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  };
+}
+
+/** Marks a page as part of the site, tied to the one business entity. */
+export function webPageSchema(args: {
+  settings: SiteSettings;
+  name: string;
+  description: string;
+  path: string;
+  image?: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: args.name,
+    description: args.description,
+    url: absoluteUrl(SITE_URL, args.path),
+    inLanguage: 'en',
+    isPartOf: { '@id': `${SITE_URL}/#website` },
+    about: { '@id': `${SITE_URL}/#person` },
+    ...(args.image ? { primaryImageOfPage: absoluteUrl(SITE_URL, args.image) } : {}),
+  };
+}
+
+/** The website itself, so Google can tie every page back to one entity. */
+export function websiteSchema(settings: SiteSettings) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
+    name: settings.site_name,
+    description: settings.short_description,
+    url: SITE_URL,
+    inLanguage: 'en',
+    publisher: { '@id': `${SITE_URL}/#business` },
   };
 }
 

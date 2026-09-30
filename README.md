@@ -222,6 +222,79 @@ only theirs is shown.
 and update `src/content/videos.ts`. Anything the client uploads through the
 dashboard goes to Supabase Storage instead and needs no code change.
 
+### Search engine optimisation
+
+The canonical production host is **https://dr-salongohamuza.com**, set in
+`src/lib/env.ts`. Every canonical tag, Open Graph URL, sitemap entry and piece
+of structured data is built from it. It is deliberately *not* derived from
+Vercel's deployment URL, which would point canonicals at a preview host and
+invite Google to index a second copy of the site. `NEXT_PUBLIC_SITE_URL`
+overrides it if a preview ever needs to be self-consistent.
+
+One host wins: `www` is redirected permanently to the apex in
+`next.config.mjs`, and `Strict-Transport-Security` keeps browsers on HTTPS.
+
+**Pages.** The site does not try to rank on the homepage alone. Alongside the
+service pages there are three cornerstone guides, written to answer a real
+question rather than to carry a keyword:
+
+| Page | Covers |
+| --- | --- |
+| `/traditional-healer-uganda` | What a traditional healer does, who consults one, how a consultation works, and where the line to medical care sits |
+| `/traditional-doctor-uganda` | The term "traditional doctor", herbs and preparations, and how this differs from a medical doctor |
+| `/witch-doctor-uganda` | Where the phrase came from, why practitioners avoid it, and the terminology used instead |
+
+Their content lives in `src/content/cornerstone.ts`, separate from the layout
+in `src/components/seo/CornerstoneArticle.tsx`, so it can be edited as prose.
+
+Two rules were held while writing all of it, and should be held to in future:
+**nothing is invented** — there are no statistics, legal claims,
+qualifications, years of experience or success rates, because none were
+supplied — and **nothing is promised**. Every page that touches health draws
+the line to medical care explicitly.
+
+**Structured data.** One entity graph, cross-referenced by `@id`, so Google
+reads the site as a single real practitioner rather than a set of unrelated
+pages: `WebSite`, `LocalBusiness` and `Person` site-wide, plus `BreadcrumbList`,
+`WebPage`, `FAQPage`, `Service`, `VideoObject` and `BlogPosting` where each
+genuinely applies.
+
+No address or coordinates are invented. `addressLocality` is only emitted once
+**Site Settings → Location** holds a real town — "Uganda" is a country, not a
+locality, and writing it into that field would be structured data that says
+something untrue. The phone number is emitted in international form
+(`+256777172119`).
+
+**Video.** Every video has its own indexable page at `/videos/[slug]` carrying
+`VideoObject` with `name`, `description`, `thumbnailUrl`, `uploadDate`,
+`duration` (ISO 8601) and `contentUrl`. A file we host is given as `contentUrl`
+and an external provider as `embedUrl` — they are not interchangeable. Each
+video has its own poster; none is shared.
+
+**Images.** Filenames are descriptive
+(`dr-salongo-hamuza-traditional-healer-uganda.webp`, `traditional-herbs-uganda.webp`)
+and every image carries alt text describing what is actually in the frame.
+
+### Google Search Console
+
+After the domain points at the deployment:
+
+1. Add **https://dr-salongohamuza.com** as a property in Search Console.
+2. Choose HTML-tag verification, copy the code, and paste it into
+   **Admin → SEO → Google site verification**. Nothing in the source needs
+   editing — the tag is rendered from that one field.
+3. Submit `https://dr-salongohamuza.com/sitemap.xml`.
+4. Use URL Inspection on the homepage and the three cornerstone guides, and
+   request indexing for each.
+
+The sitemap regenerates hourly and covers every published page — services,
+cornerstone guides, videos, work posts, albums and articles — while drafts,
+`/admin` and `/api` are excluded. The dashboard is blocked in `robots.txt`,
+carries `noindex, nofollow` metadata and an `X-Robots-Tag` header.
+
+Add the same website URL, phone number and business name to the Google
+Business Profile so the two reinforce each other, and keep them consistent.
+
 ### Performance
 
 Public pages read Supabase through a session-less client, so they stay

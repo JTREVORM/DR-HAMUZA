@@ -53,6 +53,19 @@ export function whatsappHref(whatsapp: string, message: string) {
   return `https://wa.me/${number}${text ? `?text=${text}` : ''}`;
 }
 
+/**
+ * The phone number in international E.164 form, which is what structured data
+ * and Google Business Profile expect. Ugandan local numbers (0777…) become
+ * +256777….
+ */
+export function internationalPhone(phone: string) {
+  let number = digitsOnly(phone);
+  if (!number) return '';
+  if (number.startsWith('0')) number = `256${number.slice(1)}`;
+  if (!number.startsWith('256') && number.length === 9) number = `256${number}`;
+  return `+${number}`;
+}
+
 export function telHref(phone: string) {
   const number = digitsOnly(phone);
   return `tel:${number.startsWith('0') ? number : `+${number}`}`;
@@ -148,6 +161,26 @@ export function makeVideoItem(
     ...partial,
     orientation,
   };
+}
+
+/**
+ * Turns the human duration an admin types ("1:24", "2:05:30") into the ISO 8601
+ * form `VideoObject.duration` requires. Returns '' for anything unparseable, so
+ * a bad value is left out of the markup rather than written in wrong.
+ */
+export function isoDuration(duration: string): string {
+  const parts = (duration || '').trim().split(':');
+  if (parts.length < 2 || parts.length > 3) return '';
+  if (!parts.every((p) => /^\d{1,3}$/.test(p))) return '';
+
+  const [h, m, sec] =
+    parts.length === 3
+      ? parts.map(Number)
+      : [0, Number(parts[0]), Number(parts[1])];
+  if (m > 59 || sec > 59) return '';
+  if (!h && !m && !sec) return '';
+
+  return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${sec ? `${sec}S` : ''}`;
 }
 
 export function isSelfHostedVideo(video: Pick<VideoItem, 'source' | 'video_url'>) {

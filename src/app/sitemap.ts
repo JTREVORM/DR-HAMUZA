@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/env';
+import { CORNERSTONE_PAGES } from '@/content/cornerstone';
 import {
   getBlogPosts,
   getGalleries,
@@ -54,6 +55,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticRoutes,
+    // Cornerstone guides — the pages meant to carry the subject, so they sit
+    // just under the homepage in priority. Driven off the same list the pages
+    // are built from, so a new guide cannot be forgotten here.
+    ...CORNERSTONE_PAGES.map((page) => ({
+      url: `${SITE_URL}/${page.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+    })),
     ...services.map((s) => ({
       url: `${SITE_URL}/services/${s.slug}`,
       lastModified: now,

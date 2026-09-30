@@ -32,8 +32,8 @@ export const BUNDLED_VIDEOS: CatalogueEntry[] = [
     title: 'Traditional Ceremony in the Open Field',
     description:
       'Filmed in an open garden outside Kamonkoli. A live swarm settles over the practitioner while an elder carries a basin of freshly cut herbs, and neighbours gather quietly along the path to watch the work being carried out.',
-    video_url: '/videos/traditional-ceremony-field.mp4',
-    thumbnail_url: '/video-posters/traditional-ceremony-field.webp',
+    video_url: '/videos/traditional-ceremony-open-field-uganda.mp4',
+    thumbnail_url: '/video-posters/traditional-ceremony-open-field-uganda-poster.webp',
     duration: '1:24',
     category: 'Traditional Practices',
     tags: ['traditional practice', 'ceremony', 'herbs', 'Uganda'],
@@ -52,8 +52,8 @@ export const BUNDLED_VIDEOS: CatalogueEntry[] = [
     title: 'A Gathering at the Village Compound',
     description:
       'A working afternoon in the village. Dr Salongo Hamuza moves through the compound with his helpers, a basin of prepared herbs is carried between the homesteads, and families step out of their doorways to follow what is happening.',
-    video_url: '/videos/village-healing-gathering.mp4',
-    thumbnail_url: '/video-posters/village-healing-gathering.webp',
+    video_url: '/videos/traditional-healing-village-gathering-uganda.mp4',
+    thumbnail_url: '/video-posters/traditional-healing-village-gathering-uganda-poster.webp',
     duration: '1:19',
     category: 'Community Activities',
     tags: ['community', 'village', 'traditional practice'],
@@ -72,8 +72,8 @@ export const BUNDLED_VIDEOS: CatalogueEntry[] = [
     title: 'Carrying the Herbs Through the Trading Centre',
     description:
       'Fresh green cuttings are carried in an open basin from one homestead to the next along the trading centre road, past shopfronts and neighbours, on the way to where the preparation is to be done.',
-    video_url: '/videos/herbs-and-preparation.mp4',
-    thumbnail_url: '/video-posters/herbs-and-preparation.webp',
+    video_url: '/videos/traditional-herbs-preparation-uganda.mp4',
+    thumbnail_url: '/video-posters/traditional-herbs-preparation-uganda-poster.webp',
     duration: '1:06',
     category: 'Herbs & Preparations',
     tags: ['herbs', 'preparation', 'trading centre'],
@@ -92,8 +92,8 @@ export const BUNDLED_VIDEOS: CatalogueEntry[] = [
     title: 'The Whole Village Comes to Watch',
     description:
       'One of the larger gatherings recorded. Families, elders and a long line of children stand along the edge of the field while the work is carried out in front of them in the open, with nothing hidden from view.',
-    video_url: '/videos/community-gathering.mp4',
-    thumbnail_url: '/video-posters/community-gathering.webp',
+    video_url: '/videos/traditional-healing-community-gathering-uganda.mp4',
+    thumbnail_url: '/video-posters/traditional-healing-community-gathering-uganda-poster.webp',
     duration: '2:21',
     category: 'Community Activities',
     tags: ['community', 'gathering', 'open field'],
@@ -112,8 +112,8 @@ export const BUNDLED_VIDEOS: CatalogueEntry[] = [
     title: 'A Message From Dr Salongo Hamuza',
     description:
       'Dr Salongo Hamuza speaks directly to camera in his own words and in his own language, explaining who he is, the work he does and how those who need him can make contact.',
-    video_url: '/videos/message-from-dr-salongo-hamuza.mp4',
-    thumbnail_url: '/video-posters/message-from-dr-salongo-hamuza.webp',
+    video_url: '/videos/dr-salongo-hamuza-message.mp4',
+    thumbnail_url: '/video-posters/dr-salongo-hamuza-message-poster.webp',
     duration: '2:31',
     category: 'Messages',
     tags: ['message', 'introduction', 'Dr Salongo Hamuza'],
@@ -132,8 +132,8 @@ export const BUNDLED_VIDEOS: CatalogueEntry[] = [
 export const BUNDLED_ID_PREFIX = 'bundled-';
 
 /** The hero clip is short, silent and encoded small — it autoplays on arrival. */
-export const HERO_LOOP_SRC = '/videos/hero-loop.mp4';
-export const HERO_LOOP_POSTER = '/video-posters/hero-traditional-ceremony.webp';
+export const HERO_LOOP_SRC = '/videos/traditional-healing-uganda-hero-loop.mp4';
+export const HERO_LOOP_POSTER = '/video-posters/dr-salongo-hamuza-traditional-healer-uganda-poster.webp';
 
 /**
  * Which file the hero should actually autoplay.
@@ -155,77 +155,77 @@ export function heroClipFor(video: { id: string; video_url: string } | null): st
  */
 export const FOOTAGE_STILLS = [
   {
-    url: '/images/still-herbs-and-blessing.webp',
+    url: '/images/dr-salongo-hamuza-traditional-healer-uganda.webp',
     width: 800,
     height: 1000,
     caption: 'Fresh herbs brought to the field',
     alt: 'An elder holds an open basin of freshly cut green herbs during a traditional ceremony in an open field',
   },
   {
-    url: '/images/still-community-gathering.webp',
+    url: '/images/traditional-healing-community-gathering-uganda.webp',
     width: 800,
     height: 1000,
     caption: 'Families gather to watch the work',
     alt: 'Children and families standing along the edge of an open field watching a traditional gathering',
   },
   {
-    url: '/images/still-trading-centre.webp',
+    url: '/images/dr-salongo-hamuza-traditional-practice.webp',
     width: 800,
     height: 1000,
     caption: 'Along the trading centre road',
     alt: 'Herbs carried in a basin along a village trading centre road as neighbours look on',
   },
   {
-    url: '/images/still-swarm-in-the-field.webp',
+    url: '/images/traditional-ceremony-open-field-uganda.webp',
     width: 640,
     height: 1387,
     caption: 'In the garden at midday',
     alt: 'A traditional ceremony taking place beside a motorcycle in a green garden',
   },
   {
-    url: '/images/still-walking-to-the-homestead.webp',
+    url: '/images/traditional-healer-visiting-homestead-uganda.webp',
     width: 800,
     height: 1000,
     caption: 'Walking out to the homestead',
     alt: 'A group walking through green grass towards a village homestead',
   },
   {
-    url: '/images/still-fresh-herbs.webp',
+    url: '/images/traditional-herbs-uganda.webp',
     width: 800,
     height: 800,
     caption: 'Cuttings prepared in an open basin',
     alt: 'Close view of freshly cut green herbs prepared in a red basin',
   },
   {
-    url: '/images/still-village-homestead.webp',
+    url: '/images/ugandan-village-homestead.webp',
     width: 640,
     height: 1138,
     caption: 'The homestead at Kamonkoli',
     alt: 'Grass-thatched and iron-roofed homes in a Ugandan village compound',
   },
   {
-    url: '/images/still-crowd-in-the-open-field.webp',
+    url: '/images/traditional-ceremony-crowd-uganda.webp',
     width: 640,
     height: 1138,
     caption: 'Neighbours along the path',
     alt: 'A crowd of neighbours and children standing along a path in an open field',
   },
   {
-    url: '/images/still-carrying-the-basin.webp',
+    url: '/images/traditional-herb-preparation-uganda.webp',
     width: 640,
     height: 1138,
     caption: 'Carrying the preparation',
     alt: 'A prepared basin carried by hand through a village compound',
   },
   {
-    url: '/images/still-the-swarm-close-up.webp',
+    url: '/images/traditional-practice-close-up-uganda.webp',
     width: 800,
     height: 800,
     caption: 'Close to the work',
     alt: 'A close view of the traditional work being carried out on the ground',
   },
   {
-    url: '/images/still-morning-consultation.webp',
+    url: '/images/traditional-consultation-uganda.webp',
     width: 800,
     height: 1000,
     caption: 'Early in the morning',
@@ -234,5 +234,5 @@ export const FOOTAGE_STILLS = [
 ] as const;
 
 /** Portrait frames of Dr Salongo Hamuza himself, taken from his own message. */
-export const PORTRAIT_STILL = '/images/portrait-dr-salongo-hamuza.webp';
-export const PORTRAIT_STILL_WIDE = '/images/portrait-dr-salongo-hamuza-wide.webp';
+export const PORTRAIT_STILL = '/images/dr-salongo-hamuza-portrait.webp';
+export const PORTRAIT_STILL_WIDE = '/images/dr-salongo-hamuza-speaking.webp';

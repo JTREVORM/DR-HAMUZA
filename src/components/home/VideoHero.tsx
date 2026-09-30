@@ -127,23 +127,27 @@ export function VideoHero({
       <div className="container relative z-10">
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2.5 rounded-full border border-gold-400/35 bg-forest-950/60 px-4 py-2 text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-gold-300 backdrop-blur sm:text-[0.7rem]"
-            >
-              <span aria-hidden className="h-1.5 w-1.5 rotate-45 bg-gold-400" />
-              {settings.tagline} &middot; {settings.location || 'Uganda'}
-            </motion.p>
-
+            {/*
+              The page's single H1 carries both halves of what this site is:
+              what he does, then who he is. They are two lines visually — the
+              descriptor set like an eyebrow above the name — but one heading,
+              so the hero still reads "Traditional Healer in Uganda —
+              Dr Salongo Hamuza" to a crawler and to a screen reader.
+            */}
             <motion.h1
               initial={{ opacity: 0, y: 26 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.08 }}
-              className="mt-7 font-display text-[2.5rem] uppercase leading-[0.98] tracking-tight text-cream-50 text-shadow-deep sm:text-6xl lg:text-[4.2rem]"
+              className="mt-2"
             >
-              {settings.site_name}
+              <span className="inline-flex items-center gap-2.5 rounded-full border border-gold-400/35 bg-forest-950/60 px-4 py-2 text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-gold-300 backdrop-blur sm:text-[0.7rem]">
+                <span aria-hidden className="h-1.5 w-1.5 rotate-45 bg-gold-400" />
+                Traditional Healer in Uganda
+              </span>
+              <span className="sr-only"> — </span>
+              <span className="mt-7 block font-display text-[2.5rem] uppercase leading-[0.98] tracking-tight text-cream-50 text-shadow-deep sm:text-6xl lg:text-[4.2rem]">
+                {settings.site_name}
+              </span>
             </motion.h1>
 
             <motion.p

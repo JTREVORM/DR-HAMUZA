@@ -9,6 +9,7 @@ import { VideoCarousel } from '@/components/home/VideoCarousel';
 import { VideoStory } from '@/components/home/VideoStory';
 import { AboutPreview } from '@/components/home/AboutPreview';
 import { HealerMessage } from '@/components/home/HealerMessage';
+import { GuideLinks } from '@/components/home/GuideLinks';
 import { WhyConsult } from '@/components/home/WhyConsult';
 import { ApproachSection } from '@/components/home/ApproachSection';
 import { ConsultationCTA } from '@/components/home/ConsultationCTA';
@@ -223,6 +224,9 @@ export default async function HomePage() {
           tone="light"
         />
       ) : null}
+
+      {/* Routes the "what even is this" visitor into the cornerstone guides. */}
+      <GuideLinks />
 
       <WhyConsult />
 
