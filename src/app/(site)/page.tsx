@@ -91,11 +91,18 @@ export default async function HomePage() {
       url: image.url,
       caption: image.caption || gallery.title,
       alt: image.alt_text || `${gallery.title} — ${settings.site_name}`,
+      width: image.width ?? undefined,
+      height: image.height ?? undefined,
     }))
   );
 
   const stills = FOOTAGE_STILLS.map((s) => ({ ...s }));
-  const galleryImages = [...uploadedImages, ...stills].slice(0, 10);
+
+  // The starter album is built from these same stills, so a picture can arrive
+  // down both paths. Keep the first of each.
+  const galleryImages = [...uploadedImages, ...stills]
+    .filter((image, i, all) => all.findIndex((other) => other.url === image.url) === i)
+    .slice(0, 10);
   const aboutImages = [
     ...work.map((w) => w.cover_image).filter(Boolean),
     ...stills.map((s) => s.url),

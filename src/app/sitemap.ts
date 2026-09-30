@@ -21,6 +21,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const now = new Date();
 
+  /**
+   * A row with a missing or unparseable date must not take the whole sitemap
+   * down with it — an invalid Date cannot be serialised, and Next fails the
+   * build rather than skipping the entry.
+   */
+  const dateOr = (...values: Array<string | null | undefined>) => {
+    for (const value of values) {
+      if (!value) continue;
+      const date = new Date(value);
+      if (!Number.isNaN(date.getTime())) return date;
+    }
+    return now;
+  };
+
   const staticRoutes: MetadataRoute.Sitemap = (
     [
       { url: `${SITE_URL}/`, changeFrequency: 'weekly', priority: 1 },
@@ -48,25 +62,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...work.map((w) => ({
       url: `${SITE_URL}/our-work/${w.slug}`,
-      lastModified: new Date(w.published_at || w.created_at),
+      lastModified: dateOr(w.published_at, w.created_at),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
     ...galleries.map((g) => ({
       url: `${SITE_URL}/gallery/${g.slug}`,
-      lastModified: new Date(g.created_at),
+      lastModified: dateOr(g.created_at),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     })),
     ...videos.map((v) => ({
       url: `${SITE_URL}/videos/${v.slug}`,
-      lastModified: new Date(v.published_at || v.created_at),
+      lastModified: dateOr(v.published_at, v.created_at),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
     ...posts.map((p) => ({
       url: `${SITE_URL}/blog/${p.slug}`,
-      lastModified: new Date(p.published_at || p.created_at),
+      lastModified: dateOr(p.published_at, p.created_at),
       changeFrequency: 'monthly' as const,
       priority: 0.75,
     })),

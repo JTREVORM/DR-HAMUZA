@@ -3,6 +3,7 @@ import { publicSupabase } from '@/lib/supabase/public';
 import { DEFAULT_SETTINGS } from '@/content/site-defaults';
 import { DEFAULT_SERVICES } from '@/content/services';
 import { BUNDLED_VIDEOS } from '@/content/videos';
+import { BUNDLED_GALLERIES } from '@/content/gallery';
 import type {
   BlogCategory,
   BlogPost,
@@ -141,9 +142,14 @@ export const getWorkPostBySlug = cache(async (slug: string): Promise<WorkPost | 
 
 /* ------------------------------------------------------------- galleries -- */
 
+/**
+ * Published albums. Falls back to the starter album built from Dr Salongo
+ * Hamuza's footage so the gallery is never an empty page — the moment the
+ * client publishes an album of their own, theirs is all that shows.
+ */
 export const getGalleries = cache(async (): Promise<Gallery[]> => {
   const supabase = publicSupabase();
-  if (!supabase) return [];
+  if (!supabase) return BUNDLED_GALLERIES;
   try {
     const { data } = await supabase
       .from('galleries')
@@ -151,12 +157,16 @@ export const getGalleries = cache(async (): Promise<Gallery[]> => {
       .eq('is_published', true)
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false });
-    return ((data as unknown as Gallery[]) ?? []).map((g) => ({
+
+    const albums = ((data as unknown as Gallery[]) ?? []).map((g) => ({
       ...g,
       gallery_images: (g.gallery_images ?? []).sort((a, b) => a.sort_order - b.sort_order),
     }));
+
+    // An album with no pictures in it yet should not displace the starter one.
+    return albums.some((g) => (g.gallery_images ?? []).length > 0) ? albums : BUNDLED_GALLERIES;
   } catch {
-    return [];
+    return BUNDLED_GALLERIES;
   }
 });
 

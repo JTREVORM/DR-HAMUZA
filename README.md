@@ -211,6 +211,13 @@ site are described in `src/content/videos.ts` and are used as the fallback until
 rows exist in the `videos` table; once the client adds videos in the dashboard,
 those take over entirely.
 
+The same applies to the photo gallery. `src/content/gallery.ts` holds a starter
+album, **From the Practice**, built from those stills, so `/gallery` shows real
+photographs from the first deploy instead of an empty state — the homepage links
+straight there, and that link should never land on nothing. As soon as the
+client publishes an album with pictures in it, the starter album disappears and
+only theirs is shown.
+
 **Replacing the footage.** The files in `public/` are ordinary assets — swap them
 and update `src/content/videos.ts`. Anything the client uploads through the
 dashboard goes to Supabase Storage instead and needs no code change.
