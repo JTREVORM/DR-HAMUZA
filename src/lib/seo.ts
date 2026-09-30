@@ -33,7 +33,9 @@ export function buildMetadata({
     : `${title} | ${settings.site_name}`;
 
   return {
-    title: fullTitle,
+    // `absolute` stops the root layout's "%s | Site Name" template appending
+    // the site name a second time.
+    title: { absolute: fullTitle },
     description,
     alternates: { canonical: url },
     robots: noIndex

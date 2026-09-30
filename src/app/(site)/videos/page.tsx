@@ -5,7 +5,6 @@ import { Film } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
 import { Reveal } from '@/components/ui/Reveal';
 import { JsonLd } from '@/components/ui/JsonLd';
-import { EmptyState } from '@/components/ui/EmptyState';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { VideoCard } from '@/components/cards/VideoCard';
 import { ConsultationCTA } from '@/components/home/ConsultationCTA';

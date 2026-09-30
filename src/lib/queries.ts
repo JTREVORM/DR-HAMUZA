@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { publicSupabase } from '@/lib/supabase/public';
 import { DEFAULT_SETTINGS } from '@/content/site-defaults';
 import { DEFAULT_SERVICES } from '@/content/services';
 import type {
@@ -16,10 +16,13 @@ import type {
 /**
  * All public data access lives here.
  *
- * Two rules hold throughout:
- *  1. A missing or unreachable database never breaks a page — the site falls
+ * Three rules hold throughout:
+ *  1. Reads go through a session-less client, so public pages stay statically
+ *     renderable and are revalidated on a timer rather than rebuilt on every
+ *     request.
+ *  2. A missing or unreachable database never breaks a page — the site falls
  *     back to the bundled default content and to empty lists.
- *  2. Only published / approved rows are requested. Row Level Security
+ *  3. Only published / approved rows are requested. Row Level Security
  *     enforces the same thing in the database, so an anonymous visitor cannot
  *     read a draft even if a query were wrong.
  */
@@ -57,7 +60,7 @@ function mergeSettings(row: unknown): SiteSettings {
 }
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return DEFAULT_SETTINGS;
   try {
     const { data } = await supabase.from('site_settings').select('*').eq('id', true).maybeSingle();
@@ -76,7 +79,7 @@ const fallbackServices: Service[] = DEFAULT_SERVICES.map((s, i) => ({
 }));
 
 export const getServices = cache(async (): Promise<Service[]> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return fallbackServices;
   try {
     const { data } = await supabase
@@ -84,7 +87,7 @@ export const getServices = cache(async (): Promise<Service[]> => {
       .select('*')
       .eq('is_published', true)
       .order('sort_order', { ascending: true });
-    return data && data.length ? (data as Service[]) : fallbackServices;
+    return data && data.length ? (data as unknown as Service[]) : fallbackServices;
   } catch {
     return fallbackServices;
   }
@@ -98,7 +101,7 @@ export const getServiceBySlug = cache(async (slug: string): Promise<Service | nu
 /* ------------------------------------------------------------ work posts -- */
 
 export const getWorkPosts = cache(async (limit?: number): Promise<WorkPost[]> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return [];
   try {
     let query = supabase
@@ -109,14 +112,14 @@ export const getWorkPosts = cache(async (limit?: number): Promise<WorkPost[]> =>
       .order('created_at', { ascending: false });
     if (limit) query = query.limit(limit);
     const { data } = await query;
-    return (data as WorkPost[]) ?? [];
+    return (data as unknown as WorkPost[]) ?? [];
   } catch {
     return [];
   }
 });
 
 export const getWorkPostBySlug = cache(async (slug: string): Promise<WorkPost | null> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return null;
   try {
     const { data } = await supabase
@@ -126,7 +129,7 @@ export const getWorkPostBySlug = cache(async (slug: string): Promise<WorkPost | 
       .eq('is_published', true)
       .maybeSingle();
     if (!data) return null;
-    const post = data as WorkPost;
+    const post = data as unknown as WorkPost;
     post.work_media = (post.work_media ?? []).sort((a, b) => a.sort_order - b.sort_order);
     return post;
   } catch {
@@ -137,7 +140,7 @@ export const getWorkPostBySlug = cache(async (slug: string): Promise<WorkPost | 
 /* ------------------------------------------------------------- galleries -- */
 
 export const getGalleries = cache(async (): Promise<Gallery[]> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return [];
   try {
     const { data } = await supabase
@@ -146,7 +149,7 @@ export const getGalleries = cache(async (): Promise<Gallery[]> => {
       .eq('is_published', true)
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false });
-    return ((data as Gallery[]) ?? []).map((g) => ({
+    return ((data as unknown as Gallery[]) ?? []).map((g) => ({
       ...g,
       gallery_images: (g.gallery_images ?? []).sort((a, b) => a.sort_order - b.sort_order),
     }));
@@ -163,7 +166,7 @@ export const getGalleryBySlug = cache(async (slug: string): Promise<Gallery | nu
 /* ---------------------------------------------------------------- videos -- */
 
 export const getVideos = cache(async (limit?: number): Promise<VideoItem[]> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return [];
   try {
     let query = supabase
@@ -174,14 +177,14 @@ export const getVideos = cache(async (limit?: number): Promise<VideoItem[]> => {
       .order('created_at', { ascending: false });
     if (limit) query = query.limit(limit);
     const { data } = await query;
-    return (data as VideoItem[]) ?? [];
+    return (data as unknown as VideoItem[]) ?? [];
   } catch {
     return [];
   }
 });
 
 export const getVideoBySlug = cache(async (slug: string): Promise<VideoItem | null> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return null;
   try {
     const { data } = await supabase
@@ -190,7 +193,7 @@ export const getVideoBySlug = cache(async (slug: string): Promise<VideoItem | nu
       .eq('slug', slug)
       .eq('is_published', true)
       .maybeSingle();
-    return (data as VideoItem) ?? null;
+    return (data as unknown as VideoItem) ?? null;
   } catch {
     return null;
   }
@@ -204,7 +207,7 @@ export const getFeaturedVideo = cache(async (): Promise<VideoItem | null> => {
 /* ---------------------------------------------------------- testimonials -- */
 
 export const getTestimonials = cache(async (limit?: number): Promise<Testimonial[]> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return [];
   try {
     let query = supabase
@@ -215,7 +218,7 @@ export const getTestimonials = cache(async (limit?: number): Promise<Testimonial
       .order('created_at', { ascending: false });
     if (limit) query = query.limit(limit);
     const { data } = await query;
-    return (data as Testimonial[]) ?? [];
+    return (data as unknown as Testimonial[]) ?? [];
   } catch {
     return [];
   }
@@ -224,7 +227,7 @@ export const getTestimonials = cache(async (limit?: number): Promise<Testimonial
 /* ------------------------------------------------------------------ blog -- */
 
 export const getBlogPosts = cache(async (limit?: number): Promise<BlogPost[]> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return [];
   try {
     let query = supabase
@@ -235,14 +238,14 @@ export const getBlogPosts = cache(async (limit?: number): Promise<BlogPost[]> =>
       .order('published_at', { ascending: false });
     if (limit) query = query.limit(limit);
     const { data } = await query;
-    return (data as BlogPost[]) ?? [];
+    return (data as unknown as BlogPost[]) ?? [];
   } catch {
     return [];
   }
 });
 
 export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | null> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return null;
   try {
     const { data } = await supabase
@@ -252,7 +255,7 @@ export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | 
       .eq('status', 'published')
       .maybeSingle();
     if (!data) return null;
-    const post = data as BlogPost;
+    const post = data as unknown as BlogPost;
     if (post.published_at && new Date(post.published_at) > new Date()) return null;
     return post;
   } catch {
@@ -277,11 +280,11 @@ export const getRelatedBlogPosts = cache(
 );
 
 export const getBlogCategories = cache(async (): Promise<BlogCategory[]> => {
-  const supabase = await createServerSupabase();
+  const supabase = publicSupabase();
   if (!supabase) return [];
   try {
     const { data } = await supabase.from('blog_categories').select('*').order('name');
-    return (data as BlogCategory[]) ?? [];
+    return (data as unknown as BlogCategory[]) ?? [];
   } catch {
     return [];
   }

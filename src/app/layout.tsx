@@ -1,14 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
 import { Cinzel, Cormorant_Garamond, Outfit } from 'next/font/google';
 import './globals.css';
 
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { FloatingActions } from '@/components/layout/FloatingActions';
-import { JsonLd } from '@/components/ui/JsonLd';
 import { getSettings } from '@/lib/queries';
-import { localBusinessSchema, personSchema } from '@/lib/seo';
 import { SITE_URL } from '@/lib/env';
 
 const display = Cinzel({
@@ -56,6 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: [
       'traditional healer Uganda',
       'traditional healer in Uganda',
+      'traditional healer Kampala',
       'African traditional healer',
       'spiritual consultation Uganda',
       'traditional consultation Uganda',
@@ -73,33 +68,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const settings = await getSettings();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-UG" className={`${display.variable} ${serif.variable} ${sans.variable}`}>
-      <body className="font-sans">
-        <JsonLd data={[localBusinessSchema(settings), personSchema(settings)]} />
-
-        <Header settings={settings} />
-        <main id="main" className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
-        <FloatingActions settings={settings} />
-
-        {settings.google_analytics_id ? (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${settings.google_analytics_id}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga-init" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${settings.google_analytics_id}');`}
-            </Script>
-          </>
-        ) : null}
-      </body>
+      <body className="font-sans">{children}</body>
     </html>
   );
 }
