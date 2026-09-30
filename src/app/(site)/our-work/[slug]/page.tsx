@@ -14,7 +14,7 @@ import { ConsultationCTA } from '@/components/home/ConsultationCTA';
 
 import { getSettings, getWorkPostBySlug, getWorkPosts } from '@/lib/queries';
 import { articleSchema, breadcrumbSchema, buildMetadata } from '@/lib/seo';
-import { detectVideoSource, formatDate, renderRichText } from '@/lib/utils';
+import { formatDate, makeVideoItem, renderRichText } from '@/lib/utils';
 
 export const revalidate = 300;
 
@@ -139,24 +139,18 @@ export default async function WorkPostPage({ params }: { params: Promise<{ slug:
           {post.video_url ? (
             <Reveal delay={0.08} className="mx-auto mt-14 max-w-4xl">
               <VideoPlayer
-                video={{
+                video={makeVideoItem({
                   id: post.id,
                   slug: post.slug,
                   title: post.title,
                   description: post.short_description,
-                  source: detectVideoSource(post.video_url),
                   video_url: post.video_url,
                   thumbnail_url: post.cover_image,
-                  duration: '',
                   category: post.category,
                   tags: post.tags,
-                  is_published: true,
-                  is_featured: false,
-                  seo_title: '',
-                  seo_description: '',
                   published_at: post.published_at,
                   created_at: post.created_at,
-                }}
+                })}
               />
             </Reveal>
           ) : null}

@@ -33,8 +33,11 @@ export function MasonryGallery({
             <Image
               src={item.url}
               alt={item.alt || item.caption || ''}
-              width={800}
-              height={1000}
+              /* Real dimensions where we have them: a 9:16 still and a 4:5 one
+                 reserve very different amounts of column, and guessing shifts
+                 the whole grid when the image lands. */
+              width={item.width ?? 800}
+              height={item.height ?? 1000}
               sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
               className="h-auto w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.06]"
               loading="lazy"

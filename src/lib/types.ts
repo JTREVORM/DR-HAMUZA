@@ -123,6 +123,13 @@ export interface Gallery {
 
 export type VideoSource = 'youtube' | 'vimeo' | 'upload' | 'url';
 
+/**
+ * Most of the footage on this site is filmed on a phone and is therefore
+ * portrait. The player needs to know which way round a video is so that a
+ * 9:16 clip is never stretched into a 16:9 frame.
+ */
+export type VideoOrientation = 'portrait' | 'landscape';
+
 export interface VideoItem {
   id: string;
   slug: string;
@@ -134,6 +141,12 @@ export interface VideoItem {
   duration: string;
   category: string;
   tags: string[];
+  orientation: VideoOrientation;
+  /** Plays muted behind the homepage headline. At most one video wins. */
+  is_hero: boolean;
+  /** Included in the homepage showcase and carousel. */
+  show_on_homepage: boolean;
+  sort_order: number;
   is_published: boolean;
   is_featured: boolean;
   seo_title: string;

@@ -16,10 +16,11 @@ import {
 } from '@/components/admin/ui';
 import { SeoFields, SlugField, TagsField } from '@/components/admin/form-parts';
 import { MediaField } from '@/components/admin/MediaPicker';
+import { ThumbnailGenerator } from '@/components/admin/ThumbnailGenerator';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { createClient } from '@/lib/supabase/client';
 import { detectVideoSource, slugify } from '@/lib/utils';
-import type { VideoItem, VideoSource } from '@/lib/types';
+import type { VideoItem, VideoOrientation, VideoSource } from '@/lib/types';
 
 const CATEGORIES = [
   'Traditional Practices',
@@ -28,6 +29,11 @@ const CATEGORIES = [
   'Community Activities',
   'Messages',
   'General',
+];
+
+const ORIENTATIONS: { value: VideoOrientation; label: string }[] = [
+  { value: 'portrait', label: 'Portrait (filmed on a phone, 9:16)' },
+  { value: 'landscape', label: 'Landscape (widescreen, 16:9)' },
 ];
 
 const SOURCES: { value: VideoSource; label: string }[] = [
@@ -49,12 +55,30 @@ const EMPTY: Draft = {
   duration: '',
   category: 'General',
   tags: [],
+  orientation: 'portrait',
+  is_hero: false,
+  show_on_homepage: true,
+  sort_order: 0,
   is_published: false,
   is_featured: false,
   seo_title: '',
   seo_description: '',
   published_at: null,
 };
+
+/**
+ * Stands down whichever video currently holds the hero slot.
+ *
+ * The homepage can only play one clip behind the title, and the database
+ * enforces that with a partial unique index — so the old hero has to be cleared
+ * *before* the new one is saved, or the save trips the constraint.
+ */
+async function clearHeroes(supabase: ReturnType<typeof createClient>, exceptId: string | null) {
+  let query = supabase.from('videos').update({ is_hero: false }).eq('is_hero', true);
+  if (exceptId) query = query.neq('id', exceptId);
+  const { error } = await query;
+  if (error) throw error;
+}
 
 export default function AdminVideoEditorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -110,6 +134,8 @@ export default function AdminVideoEditorPage({ params }: { params: Promise<{ id:
 
     try {
       const supabase = createClient();
+      if (payload.is_hero) await clearHeroes(supabase, isNew ? null : id);
+
       if (isNew) {
         const { data, error } = await supabase
           .from('videos')
@@ -262,15 +288,27 @@ export default function AdminVideoEditorPage({ params }: { params: Promise<{ id:
             <div className="space-y-3">
               <Toggle
                 label="Published"
-                description="Only published videos appear on the website."
+                description="Draft videos are saved but stay off the website until this is switched on."
                 checked={draft.is_published}
                 onChange={(v) => set('is_published', v)}
               />
               <Toggle
-                label="Featured"
-                description="The featured video is shown large on the homepage and the videos page."
+                label="Show on homepage"
+                description="Include this video in the homepage showcase and carousel."
+                checked={draft.show_on_homepage}
+                onChange={(v) => set('show_on_homepage', v)}
+              />
+              <Toggle
+                label="Feature on homepage"
+                description="Gives this video the large cinematic section near the top of the homepage. Use it for one video at a time."
                 checked={draft.is_featured}
                 onChange={(v) => set('is_featured', v)}
+              />
+              <Toggle
+                label="Set as hero video"
+                description="Plays silently behind the homepage headline. Only one video can be the hero — setting this one clears the others when you save."
+                checked={draft.is_hero}
+                onChange={(v) => set('is_hero', v)}
               />
             </div>
           </AdminCard>
@@ -282,6 +320,13 @@ export default function AdminVideoEditorPage({ params }: { params: Promise<{ id:
               onChange={(v) => set('thumbnail_url', v)}
               hint="Optional. YouTube videos use their own thumbnail automatically."
             />
+            {draft.source === 'upload' ? (
+              <ThumbnailGenerator
+                videoUrl={draft.video_url}
+                title={draft.title}
+                onGenerated={(url) => set('thumbnail_url', url)}
+              />
+            ) : null}
           </AdminCard>
 
           <AdminCard title="Organisation">
@@ -300,12 +345,52 @@ export default function AdminVideoEditorPage({ params }: { params: Promise<{ id:
                 </select>
               </Field>
 
+              <Field
+                label="Orientation"
+                hint="Portrait video is never stretched — it is given a tall player instead."
+              >
+                <select
+                  value={draft.orientation}
+                  onChange={(e) => set('orientation', e.target.value as VideoOrientation)}
+                  className="field"
+                >
+                  {ORIENTATIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+
               <Field label="Duration" hint="Optional, for example 4:32.">
                 <input
                   type="text"
                   value={draft.duration}
                   onChange={(e) => set('duration', e.target.value)}
                   maxLength={20}
+                  className="field"
+                />
+              </Field>
+
+              <Field
+                label="Display order"
+                hint="Lower numbers come first. Leave at 0 to order by date instead."
+              >
+                <input
+                  type="number"
+                  min={0}
+                  max={999}
+                  value={draft.sort_order}
+                  onChange={(e) => set('sort_order', Number(e.target.value) || 0)}
+                  className="field"
+                />
+              </Field>
+
+              <Field label="Publish date" hint="Shown on the video card.">
+                <input
+                  type="date"
+                  value={draft.published_at ? draft.published_at.slice(0, 10) : ''}
+                  onChange={(e) => set('published_at', e.target.value || null)}
                   className="field"
                 />
               </Field>

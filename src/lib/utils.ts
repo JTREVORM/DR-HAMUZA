@@ -1,4 +1,4 @@
-import type { VideoItem, VideoSource } from '@/lib/types';
+import type { VideoItem, VideoOrientation, VideoSource } from '@/lib/types';
 
 export function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(' ');
@@ -115,6 +115,39 @@ export function videoThumbnail(video: Pick<VideoItem, 'source' | 'video_url' | '
   if (video.thumbnail_url) return video.thumbnail_url;
   const id = youtubeId(video.video_url);
   return id ? `https://i.ytimg.com/vi/${id}/maxresdefault.jpg` : '';
+}
+
+/**
+ * Builds a complete `VideoItem` from whatever a caller happens to have.
+ *
+ * Pages that show a video attached to something else — a work post, say — do
+ * not have a videos row to hand, and the player needs every field present.
+ */
+export function makeVideoItem(
+  partial: Partial<VideoItem> & { video_url: string; title: string }
+): VideoItem {
+  const orientation: VideoOrientation = partial.orientation ?? 'landscape';
+  return {
+    id: '',
+    slug: '',
+    description: '',
+    source: detectVideoSource(partial.video_url),
+    thumbnail_url: '',
+    duration: '',
+    category: '',
+    tags: [],
+    is_hero: false,
+    show_on_homepage: false,
+    sort_order: 0,
+    is_published: true,
+    is_featured: false,
+    seo_title: '',
+    seo_description: '',
+    published_at: null,
+    created_at: '',
+    ...partial,
+    orientation,
+  };
 }
 
 export function isSelfHostedVideo(video: Pick<VideoItem, 'source' | 'video_url'>) {
