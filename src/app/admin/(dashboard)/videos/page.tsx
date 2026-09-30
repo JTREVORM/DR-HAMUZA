@@ -114,7 +114,7 @@ export default function AdminVideosListPage() {
                     <h2 className="font-display text-[1.05rem] text-forest-900">{video.title}</h2>
                     <StatusPill published={video.is_published} />
                     {video.is_featured ? (
-                      <span className="rounded-full bg-gold-100 px-2.5 py-1 text-[0.68rem] font-semibold text-gold-800">
+                      <span className="rounded-full bg-gold-100 px-2.5 py-1 text-[0.70rem] font-semibold text-gold-800">
                         Featured
                       </span>
                     ) : null}

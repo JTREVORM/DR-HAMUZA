@@ -72,7 +72,7 @@ export function Header({ settings }: { settings: SiteSettings }) {
               <span className="truncate font-display text-[1.05rem] tracking-wide text-cream-100 transition group-hover:text-gold-200 lg:text-[1.15rem]">
                 {settings.site_name}
               </span>
-              <span className="mt-1 truncate text-[0.6rem] font-semibold uppercase tracking-[0.24em] text-gold-400">
+              <span className="mt-1 truncate text-[0.70rem] font-semibold uppercase tracking-[0.24em] text-gold-400">
                 {settings.tagline}
               </span>
             </span>
@@ -85,7 +85,7 @@ export function Header({ settings }: { settings: SiteSettings }) {
                 href={item.href}
                 aria-current={isActive(item.href) ? 'page' : undefined}
                 className={cn(
-                  'relative rounded-full px-3 py-2 text-[0.82rem] font-medium tracking-wide transition-colors',
+                  'relative whitespace-nowrap rounded-full px-3 py-2 text-[0.82rem] font-medium tracking-wide transition-colors',
                   isActive(item.href)
                     ? 'text-gold-300'
                     : 'text-cream-100/80 hover:text-gold-200'

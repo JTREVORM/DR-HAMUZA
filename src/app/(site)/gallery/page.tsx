@@ -90,7 +90,7 @@ export default async function GalleryPage() {
                           />
                           <span className="absolute inset-x-0 bottom-0 p-5">
                             {album.category ? (
-                              <span className="text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-gold-300">
+                              <span className="text-[0.70rem] font-semibold uppercase tracking-[0.2em] text-gold-300">
                                 {album.category}
                               </span>
                             ) : null}

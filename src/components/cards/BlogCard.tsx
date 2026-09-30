@@ -49,7 +49,7 @@ export function BlogCard({ post, priority }: { post: BlogPost; priority?: boolea
           </span>
           <Link
             href={`/blog/${post.slug}`}
-            className="inline-flex items-center gap-1.5 text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-gold-700 transition hover:text-forest-900"
+            className="inline-flex items-center gap-1.5 py-2 text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-gold-700 transition hover:text-forest-900"
           >
             Read
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />

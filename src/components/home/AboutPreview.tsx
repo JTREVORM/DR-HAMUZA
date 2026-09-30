@@ -47,7 +47,7 @@ export function AboutPreview({
                   />
                 ) : (
                   <div className="pattern-diamond flex h-full w-full items-center justify-center bg-gradient-to-br from-forest-800 to-forest-950 p-10">
-                    <Logo src={settings.logo_url} alt="" size={300} className="!h-auto !w-full" />
+                    <Logo src={settings.logo_url} alt="" size={300} className="!h-full !w-full" />
                   </div>
                 )}
                 <span

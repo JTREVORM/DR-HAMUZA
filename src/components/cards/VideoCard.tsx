@@ -35,7 +35,7 @@ export function VideoCard({ video, priority }: { video: VideoItem; priority?: bo
             </span>
           </span>
           {video.duration ? (
-            <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-md bg-forest-950/85 px-2 py-1 text-[0.68rem] font-medium text-cream-200">
+            <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-md bg-forest-950/85 px-2 py-1 text-[0.70rem] font-medium text-cream-200">
               <Clock className="h-3 w-3" aria-hidden />
               {video.duration}
             </span>
@@ -44,7 +44,7 @@ export function VideoCard({ video, priority }: { video: VideoItem; priority?: bo
 
         <div className="p-6">
           {video.category ? (
-            <span className="eyebrow-light text-[0.62rem]">{video.category}</span>
+            <span className="eyebrow-light text-[0.70rem]">{video.category}</span>
           ) : null}
           <h3 className="mt-2.5 line-clamp-2 font-display text-lg leading-snug text-cream-100 transition group-hover:text-gold-200">
             {video.title}

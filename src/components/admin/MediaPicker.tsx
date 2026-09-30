@@ -220,7 +220,7 @@ export function MediaPickerDialog({
                       <span className="block truncate text-[0.72rem] font-medium text-forest-900">
                         {item.title || item.file_name}
                       </span>
-                      <span className="block text-[0.66rem] text-forest-800/50">
+                      <span className="block text-[0.70rem] text-forest-800/50">
                         {formatBytes(item.size_bytes)}
                       </span>
                     </span>

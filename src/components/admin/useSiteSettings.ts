@@ -59,10 +59,11 @@ export function useSiteSettings() {
       setSaving(true);
       setFeedback(null);
       try {
+        // `site_settings` holds exactly one row, keyed by the constant id `true`,
+        // so an upsert on that key both creates and updates it.
         const { error } = await createClient()
           .from('site_settings')
-          .upsert({ id: true, ...fields })
-          .eq('id', true);
+          .upsert({ id: true, ...fields }, { onConflict: 'id' });
         if (error) throw error;
         setFeedback({ type: 'success', message: successMessage });
       } catch (e) {

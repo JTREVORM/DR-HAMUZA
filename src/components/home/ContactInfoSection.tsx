@@ -70,7 +70,7 @@ export function ContactInfoSection({ settings }: { settings: SiteSettings }) {
                 <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gold-300 bg-gold-50 text-gold-700 transition-colors duration-500 group-hover:bg-gold-400 group-hover:text-forest-950">
                   <card.icon className="h-5 w-5" aria-hidden />
                 </span>
-                <span className="mt-5 block text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-forest-800/50">
+                <span className="mt-5 block text-[0.70rem] font-semibold uppercase tracking-[0.22em] text-forest-800/50">
                   {card.label}
                 </span>
                 <span className="mt-2 block break-words font-display text-[1.15rem] text-forest-900">

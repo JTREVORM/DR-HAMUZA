@@ -102,7 +102,7 @@ export default async function AboutPage() {
                           src={settings.logo_url}
                           alt=""
                           size={320}
-                          className="!h-auto !w-full"
+                          className="!h-full !w-full"
                         />
                       </div>
                     )}
@@ -129,7 +129,7 @@ export default async function AboutPage() {
                 ) : null}
 
                 <div className="mt-6 rounded-2xl border border-gold-300/50 bg-gradient-to-br from-forest-900 to-forest-950 p-6">
-                  <p className="text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-gold-400">
+                  <p className="text-[0.70rem] font-semibold uppercase tracking-[0.22em] text-gold-400">
                     Speak with him directly
                   </p>
                   <p className="mt-3 font-display text-2xl text-cream-100">{settings.phone}</p>

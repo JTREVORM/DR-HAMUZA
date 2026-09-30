@@ -112,7 +112,7 @@ export function Hero({ settings }: { settings: SiteSettings }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2.5 rounded-full border border-gold-400/35 bg-forest-900/50 px-4 py-2 text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-gold-300 backdrop-blur"
+              className="inline-flex items-center gap-2.5 rounded-full border border-gold-400/35 bg-forest-900/50 px-4 py-2 text-[0.70rem] font-semibold uppercase tracking-[0.24em] text-gold-300 backdrop-blur"
             >
               <Sparkles className="h-3.5 w-3.5" aria-hidden />
               {settings.tagline} &middot; {settings.location || 'Uganda'}
@@ -170,7 +170,7 @@ export function Hero({ settings }: { settings: SiteSettings }) {
                   <Phone className="h-5 w-5" aria-hidden />
                 </span>
                 <span className="flex flex-col leading-tight">
-                  <span className="text-[0.62rem] uppercase tracking-[0.22em] text-gold-400/80">
+                  <span className="text-[0.70rem] uppercase tracking-[0.22em] text-gold-400/80">
                     Call directly
                   </span>
                   <span className="font-display text-xl tracking-wide text-cream-100">

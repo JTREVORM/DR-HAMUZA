@@ -102,7 +102,7 @@ export function SeoFields({
 
         {/* Google-style preview */}
         <div className="rounded-xl border border-earth-200 bg-cream-50 p-4">
-          <p className="mb-2 flex items-center gap-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-forest-800/45">
+          <p className="mb-2 flex items-center gap-1.5 text-[0.70rem] font-semibold uppercase tracking-[0.16em] text-forest-800/45">
             <Link2 className="h-3.5 w-3.5" aria-hidden />
             Preview
           </p>

@@ -89,7 +89,7 @@ export default async function ContactPage({
                       <Phone className="h-5 w-5" aria-hidden />
                     </span>
                     <span>
-                      <span className="block text-[0.62rem] uppercase tracking-[0.2em] text-gold-400/80">
+                      <span className="block text-[0.70rem] uppercase tracking-[0.2em] text-gold-400/80">
                         Telephone
                       </span>
                       <span className="mt-0.5 block font-display text-xl text-cream-100">
@@ -108,7 +108,7 @@ export default async function ContactPage({
                       <MessageCircle className="h-5 w-5" aria-hidden />
                     </span>
                     <span>
-                      <span className="block text-[0.62rem] uppercase tracking-[0.2em] text-gold-400/80">
+                      <span className="block text-[0.70rem] uppercase tracking-[0.2em] text-gold-400/80">
                         WhatsApp
                       </span>
                       <span className="mt-0.5 block font-display text-lg text-cream-100">
@@ -126,7 +126,7 @@ export default async function ContactPage({
                         <Mail className="h-5 w-5" aria-hidden />
                       </span>
                       <span className="min-w-0">
-                        <span className="block text-[0.62rem] uppercase tracking-[0.2em] text-gold-400/80">
+                        <span className="block text-[0.70rem] uppercase tracking-[0.2em] text-gold-400/80">
                           Email
                         </span>
                         <span className="mt-0.5 block truncate text-[0.95rem] text-cream-100">
@@ -142,7 +142,7 @@ export default async function ContactPage({
                         <MapPin className="h-5 w-5" aria-hidden />
                       </span>
                       <span>
-                        <span className="block text-[0.62rem] uppercase tracking-[0.2em] text-gold-400/80">
+                        <span className="block text-[0.70rem] uppercase tracking-[0.2em] text-gold-400/80">
                           Service area
                         </span>
                         <span className="mt-0.5 block text-[0.95rem] text-cream-100">

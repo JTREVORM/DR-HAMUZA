@@ -28,7 +28,7 @@ export function WorkCard({ post, priority }: { post: WorkPost; priority?: boolea
         />
 
         {post.category ? (
-          <span className="absolute left-4 top-4 rounded-full border border-gold-400/50 bg-forest-950/70 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-gold-200 backdrop-blur">
+          <span className="absolute left-4 top-4 rounded-full border border-gold-400/50 bg-forest-950/70 px-3 py-1 text-[0.70rem] font-semibold uppercase tracking-[0.16em] text-gold-200 backdrop-blur">
             {post.category}
           </span>
         ) : null}

@@ -56,7 +56,7 @@ export async function Footer() {
               <Logo src={settings.logo_url} alt={`${settings.site_name} logo`} size={72} />
               <span className="flex flex-col leading-none">
                 <span className="font-display text-xl text-cream-100">{settings.site_name}</span>
-                <span className="mt-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-gold-400">
+                <span className="mt-1.5 text-[0.70rem] font-semibold uppercase tracking-[0.24em] text-gold-400">
                   {settings.tagline}
                 </span>
               </span>
@@ -85,12 +85,12 @@ export async function Footer() {
           {/* Quick links */}
           <nav aria-label="Footer navigation" className="lg:col-span-2">
             <h2 className="mb-5 font-display text-base text-gold-300">Explore</h2>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-1 text-sm">
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="transition hover:text-gold-200 hover:underline hover:underline-offset-4"
+                    className="inline-block py-1.5 transition hover:text-gold-200 hover:underline hover:underline-offset-4"
                   >
                     {item.label}
                   </Link>
@@ -102,19 +102,19 @@ export async function Footer() {
           {/* Services */}
           <nav aria-label="Consultation areas" className="lg:col-span-3">
             <h2 className="mb-5 font-display text-base text-gold-300">Consultation Areas</h2>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-1 text-sm">
               {services.slice(0, 8).map((service) => (
                 <li key={service.slug}>
                   <Link
                     href={`/services/${service.slug}`}
-                    className="transition hover:text-gold-200 hover:underline hover:underline-offset-4"
+                    className="inline-block py-1.5 transition hover:text-gold-200 hover:underline hover:underline-offset-4"
                   >
                     {service.title}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/services" className="font-medium text-gold-300 hover:text-gold-200">
+                <Link href="/services" className="inline-block py-1.5 font-medium text-gold-300 hover:text-gold-200">
                   View all services &rarr;
                 </Link>
               </li>
@@ -128,7 +128,7 @@ export async function Footer() {
               <li>
                 <a
                   href={telHref(settings.phone)}
-                  className="flex items-start gap-3 transition hover:text-gold-200"
+                  className="flex items-start gap-3 py-1.5 transition hover:text-gold-200"
                 >
                   <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
                   <span className="font-semibold tracking-wide">{settings.phone}</span>
@@ -139,7 +139,7 @@ export async function Footer() {
                   href={wa}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-3 transition hover:text-gold-200"
+                  className="flex items-start gap-3 py-1.5 transition hover:text-gold-200"
                 >
                   <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
                   <span>WhatsApp Dr Salongo Hamuza</span>
@@ -149,7 +149,7 @@ export async function Footer() {
                 <li>
                   <a
                     href={`mailto:${settings.email}`}
-                    className="flex items-start gap-3 break-all transition hover:text-gold-200"
+                    className="flex items-start gap-3 break-all py-1.5 transition hover:text-gold-200"
                   >
                     <Mail className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
                     <span>{settings.email}</span>
@@ -166,7 +166,7 @@ export async function Footer() {
 
             {settings.business_hours.length ? (
               <div className="mt-7">
-                <h3 className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-gold-400">
+                <h3 className="mb-3 text-[0.70rem] font-semibold uppercase tracking-[0.22em] text-gold-400">
                   Consultation Hours
                 </h3>
                 <ul className="space-y-1.5 text-[0.82rem]">
@@ -182,7 +182,7 @@ export async function Footer() {
 
             {posts.length ? (
               <div className="mt-7">
-                <h3 className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-gold-400">
+                <h3 className="mb-3 text-[0.70rem] font-semibold uppercase tracking-[0.22em] text-gold-400">
                   Latest Insights
                 </h3>
                 <ul className="space-y-2.5 text-[0.82rem]">
@@ -190,7 +190,7 @@ export async function Footer() {
                     <li key={post.id}>
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="line-clamp-2 transition hover:text-gold-200"
+                        className="inline-block py-1 transition hover:text-gold-200"
                       >
                         {post.title}
                       </Link>
@@ -224,7 +224,7 @@ export async function Footer() {
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {LEGAL_ITEMS.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="transition hover:text-gold-200">
+                <Link href={item.href} className="inline-block py-1.5 transition hover:text-gold-200">
                   {item.label}
                 </Link>
               </li>

@@ -49,7 +49,7 @@ export function TrustStrip({ settings }: { settings: SiteSettings }) {
 
           <Reveal delay={0.1} className="lg:col-span-5">
             <div className="rounded-2xl border border-gold-300/50 bg-gradient-to-br from-forest-900 to-forest-950 p-7 shadow-deep">
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-gold-400">
+              <p className="text-[0.70rem] font-semibold uppercase tracking-[0.24em] text-gold-400">
                 Speak to Dr Salongo Hamuza
               </p>
               <p className="mt-4 font-display text-3xl tracking-wide text-cream-100">

@@ -149,7 +149,7 @@ export default function AdminServicesListPage() {
                   <h2 className="font-display text-[1.05rem] text-forest-900">{service.title}</h2>
                   <StatusPill published={service.is_published} labels={['Published', 'Hidden']} />
                   {service.is_featured ? (
-                    <span className="rounded-full bg-gold-100 px-2.5 py-1 text-[0.68rem] font-semibold text-gold-800">
+                    <span className="rounded-full bg-gold-100 px-2.5 py-1 text-[0.70rem] font-semibold text-gold-800">
                       Featured
                     </span>
                   ) : null}

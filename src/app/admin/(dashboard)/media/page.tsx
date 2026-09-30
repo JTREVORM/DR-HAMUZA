@@ -307,7 +307,7 @@ export default function AdminMediaPage() {
                 <span className="block truncate text-[0.78rem] font-medium text-forest-900">
                   {item.title || item.file_name}
                 </span>
-                <span className="mt-0.5 block text-[0.68rem] text-forest-800/50">
+                <span className="mt-0.5 block text-[0.70rem] text-forest-800/50">
                   {formatBytes(item.size_bytes)}
                   {item.width ? ` · ${item.width}×${item.height}` : ''}
                 </span>

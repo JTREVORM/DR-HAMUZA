@@ -18,7 +18,7 @@ export function EmptyState({
           {icon}
         </div>
       ) : null}
-      <h3 className="font-display text-xl text-forest-900">{title}</h3>
+      <h2 className="font-display text-xl text-forest-900">{title}</h2>
       <p className="mx-auto mt-2.5 max-w-md text-sm leading-relaxed text-forest-800/70">
         {description}
       </p>

@@ -85,7 +85,7 @@ export function AdminSidebar({
           <span className="truncate font-display text-[0.95rem] text-cream-100">
             Dr Salongo Hamuza
           </span>
-          <span className="mt-1 text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-gold-400">
+          <span className="mt-1 text-[0.70rem] font-semibold uppercase tracking-[0.2em] text-gold-400">
             Admin dashboard
           </span>
         </span>
@@ -108,7 +108,7 @@ export function AdminSidebar({
               <Icon className="h-[18px] w-[18px] shrink-0" aria-hidden />
               <span className="flex-1">{label}</span>
               {href === '/admin/messages' && unread > 0 ? (
-                <span className="rounded-full bg-gold-400 px-2 py-0.5 text-[0.65rem] font-bold text-forest-950">
+                <span className="rounded-full bg-gold-400 px-2 py-0.5 text-[0.70rem] font-bold text-forest-950">
                   {unread}
                 </span>
               ) : null}

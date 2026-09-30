@@ -73,7 +73,7 @@ export function ServiceCard({
         <Link
           href={`/services/${service.slug}`}
           className={cn(
-            'mt-6 inline-flex items-center gap-2 text-[0.82rem] font-semibold uppercase tracking-[0.14em] transition',
+            'mt-6 inline-flex items-center gap-2 py-2 text-[0.82rem] font-semibold uppercase tracking-[0.14em] transition',
             dark ? 'text-gold-300 hover:text-gold-200' : 'text-gold-700 hover:text-forest-900'
           )}
         >

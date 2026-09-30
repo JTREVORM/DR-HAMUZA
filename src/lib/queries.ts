@@ -234,8 +234,11 @@ export const getBlogPosts = cache(async (limit?: number): Promise<BlogPost[]> =>
       .from('blog_posts')
       .select('*, blog_categories(*)')
       .eq('status', 'published')
-      .lte('published_at', new Date().toISOString())
-      .order('published_at', { ascending: false });
+      // Matches the RLS policy: a scheduled post stays hidden until its time,
+      // while a published post with no date set is shown straight away.
+      .or(`published_at.is.null,published_at.lte.${new Date().toISOString()}`)
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false });
     if (limit) query = query.limit(limit);
     const { data } = await query;
     return (data as unknown as BlogPost[]) ?? [];

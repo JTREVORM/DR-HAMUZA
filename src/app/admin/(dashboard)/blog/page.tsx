@@ -124,7 +124,7 @@ export default function AdminBlogListPage() {
                   <h2 className="font-display text-[1.05rem] text-forest-900">{post.title}</h2>
                   <StatusPill published={post.status === 'published'} />
                   {scheduled(post) ? (
-                    <span className="rounded-full bg-blue-100 px-2.5 py-1 text-[0.68rem] font-semibold text-blue-800">
+                    <span className="rounded-full bg-blue-100 px-2.5 py-1 text-[0.70rem] font-semibold text-blue-800">
                       Scheduled
                     </span>
                   ) : null}

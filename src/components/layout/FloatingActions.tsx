@@ -23,7 +23,7 @@ export function FloatingActions({ settings }: { settings: SiteSettings }) {
 
   return (
     <>
-      <div className="pointer-events-none fixed bottom-24 right-4 z-[95] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+      <div className="pointer-events-none fixed bottom-[5.25rem] right-4 z-[95] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
         <AnimatePresence>
           {showTop ? (
             <motion.button
@@ -41,12 +41,13 @@ export function FloatingActions({ settings }: { settings: SiteSettings }) {
           ) : null}
         </AnimatePresence>
 
+        {/* Hidden on phones — the sticky bar below already carries WhatsApp. */}
         <a
           href={wa}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat with Dr Salongo Hamuza on WhatsApp"
-          className="pointer-events-auto flex h-14 w-14 animate-pulse-ring items-center justify-center rounded-full bg-[#1FA855] text-white shadow-[0_12px_32px_-10px_rgba(31,168,85,0.9)] transition hover:scale-105 hover:bg-[#199348]"
+          className="pointer-events-auto hidden h-14 w-14 animate-pulse-ring items-center justify-center rounded-full bg-[#1FA855] sm:flex text-white shadow-[0_12px_32px_-10px_rgba(31,168,85,0.9)] transition hover:scale-105 hover:bg-[#199348]"
         >
           <MessageCircle className="h-6 w-6" />
         </a>
