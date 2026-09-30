@@ -117,10 +117,15 @@ export default async function HomePage() {
       {/* 2 ------------------------------------------ trust / introduction */}
       <TrustStrip settings={settings} />
 
-      {/* 3 ---------------------------------------------- large featured video */}
+      {/* 3 -------------------------- the client's message, in his own words --
+        Placed high on purpose: his own statement is the most direct thing the
+        site has to say, and it is what he asked visitors to read first. */}
+      <HealerMessage settings={settings} />
+
+      {/* 4 ---------------------------------------------- large featured video */}
       {featured ? <FeaturedVideo video={featured} /> : null}
 
-      {/* 4 ----------------------------------------------- featured services */}
+      {/* 5 ----------------------------------------------- featured services */}
       <section className="relative bg-cream-100 py-20 lg:py-28">
         <div aria-hidden className="pattern-weave absolute inset-0 opacity-60" />
         <div className="container relative z-10">
@@ -147,14 +152,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 5 ------------------------------------------- latest work video grid */}
+      {/* 6 ------------------------------------------- latest work video grid */}
       <VideoShowcase videos={showcaseVideos} />
 
-      {/* 6 -------------------------------------- about, with authentic stills */}
+      {/* 7 -------------------------------------- about, with authentic stills */}
       <AboutPreview settings={settings} images={aboutImages} />
-
-      {/* 7 ------------------------------- the client's message, word for word */}
-      <HealerMessage settings={settings} />
 
       {/* 8 ------------------------------------ traditional practice, on video */}
       {practiceVideo ? (
