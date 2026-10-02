@@ -9,6 +9,9 @@ interface BuildMetadataArgs {
   description: string;
   path: string;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageType?: string;
   type?: 'website' | 'article' | 'profile';
   publishedTime?: string | null;
   tags?: string[];
@@ -21,6 +24,9 @@ export function buildMetadata({
   description,
   path,
   image,
+  imageWidth = 1200,
+  imageHeight = 630,
+  imageType,
   type = 'website',
   publishedTime,
   tags,
@@ -48,7 +54,14 @@ export function buildMetadata({
       description,
       siteName: settings.site_name,
       locale: 'en_UG',
-      images: [{ url: ogImage, width: 1200, height: 1200, alt: settings.site_name }],
+      images: [{
+        url: ogImage,
+        secureUrl: ogImage,
+        width: imageWidth,
+        height: imageHeight,
+        alt: settings.site_name,
+        ...(imageType ? { type: imageType } : {}),
+      }],
       ...(publishedTime ? { publishedTime } : {}),
       ...(tags?.length ? { tags } : {}),
     },
