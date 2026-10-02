@@ -8,6 +8,9 @@ export interface LightboxItem {
   url: string;
   caption?: string;
   alt?: string;
+  /** True pixel size, when known, so the grid reserves the right space. */
+  width?: number;
+  height?: number;
 }
 
 /** Accessible, keyboard-navigable image viewer used by the galleries. */

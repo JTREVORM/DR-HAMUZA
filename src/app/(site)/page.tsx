@@ -1,10 +1,15 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
-import { Hero } from '@/components/home/Hero';
+import { VideoHero } from '@/components/home/VideoHero';
 import { TrustStrip } from '@/components/home/TrustStrip';
+import { FeaturedVideo } from '@/components/home/FeaturedVideo';
+import { VideoShowcase } from '@/components/home/VideoShowcase';
+import { VideoCarousel } from '@/components/home/VideoCarousel';
+import { VideoStory } from '@/components/home/VideoStory';
 import { AboutPreview } from '@/components/home/AboutPreview';
 import { HealerMessage } from '@/components/home/HealerMessage';
+import { GuideLinks } from '@/components/home/GuideLinks';
 import { WhyConsult } from '@/components/home/WhyConsult';
 import { ApproachSection } from '@/components/home/ApproachSection';
 import { ConsultationCTA } from '@/components/home/ConsultationCTA';
@@ -14,20 +19,19 @@ import { DisclaimerSection } from '@/components/home/DisclaimerSection';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Reveal } from '@/components/ui/Reveal';
 import { MasonryGallery } from '@/components/ui/MasonryGallery';
-import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { ServiceCard } from '@/components/cards/ServiceCard';
 import { WorkCard } from '@/components/cards/WorkCard';
-import { VideoCard } from '@/components/cards/VideoCard';
 import { BlogCard } from '@/components/cards/BlogCard';
 import { TestimonialCard } from '@/components/cards/TestimonialCard';
 
+import { FOOTAGE_STILLS } from '@/content/videos';
 import {
   getBlogPosts,
   getGalleries,
+  getHomepageVideos,
   getServices,
   getSettings,
   getTestimonials,
-  getVideos,
   getWorkPosts,
 } from '@/lib/queries';
 import { buildMetadata } from '@/lib/seo';
@@ -51,7 +55,7 @@ export default async function HomePage() {
     getServices(),
     getWorkPosts(6),
     getGalleries(),
-    getVideos(7),
+    getHomepageVideos(),
     getTestimonials(6),
     getBlogPosts(3),
   ]);
@@ -61,34 +65,67 @@ export default async function HomePage() {
     return (featured.length >= 3 ? featured : services).slice(0, 6);
   })();
 
-  const galleryImages = galleries
-    .flatMap((gallery) =>
-      (gallery.gallery_images ?? []).map((image) => ({
-        url: image.url,
-        caption: image.caption || gallery.title,
-        alt: image.alt_text || `${gallery.title} — ${settings.site_name}`,
-      }))
-    )
-    .slice(0, 8);
+  /* ------------------------------------------------------------- videos --
+   * The hero clip plays behind the headline, one video carries the featured
+   * section, and everything else fills the showcase and the carousel. Each
+   * video therefore has a reason to be on the page rather than padding it.  */
+  const { hero, featured, rest, pool } = videos;
+  const showcaseVideos = featured ? [featured, ...rest] : rest;
 
-  const featuredVideo = videos.find((v) => v.is_featured) ?? videos[0] ?? null;
-  const latestVideos = videos.filter((v) => v.id !== featuredVideo?.id).slice(0, 3);
+  // Videos used to illustrate a story section further down, picked by what they
+  // actually show rather than by position in the list.
+  const practiceVideo =
+    pool.find((v) => v.category === 'Herbs & Preparations') ??
+    rest.find((v) => v.id !== featured?.id) ??
+    null;
+  const messageVideo =
+    pool.find((v) => v.category === 'Messages') ??
+    pool.find((v) => v.id !== hero?.id && v.id !== featured?.id && v.id !== practiceVideo?.id) ??
+    null;
 
-  // Portrait / supporting images for the About block, drawn from whatever the
-  // admin has already uploaded so the section is never a blank placeholder.
+  /* -------------------------------------------------------------- images --
+   * All photography on this page is taken from Dr Salongo Hamuza's own
+   * footage, so admin-uploaded gallery images come first and the graded stills
+   * fill out whatever is left.                                              */
+  const uploadedImages = galleries.flatMap((gallery) =>
+    (gallery.gallery_images ?? []).map((image) => ({
+      url: image.url,
+      caption: image.caption || gallery.title,
+      alt: image.alt_text || `${gallery.title} — ${settings.site_name}`,
+      width: image.width ?? undefined,
+      height: image.height ?? undefined,
+    }))
+  );
+
+  const stills = FOOTAGE_STILLS.map((s) => ({ ...s }));
+
+  // The starter album is built from these same stills, so a picture can arrive
+  // down both paths. Keep the first of each.
+  const galleryImages = [...uploadedImages, ...stills]
+    .filter((image, i, all) => all.findIndex((other) => other.url === image.url) === i)
+    .slice(0, 10);
   const aboutImages = [
-    ...galleries.flatMap((g) => (g.gallery_images ?? []).map((i) => i.url)),
-    ...work.map((w) => w.cover_image),
-  ].filter(Boolean);
+    ...work.map((w) => w.cover_image).filter(Boolean),
+    ...stills.map((s) => s.url),
+  ];
 
   return (
     <>
-      <Hero settings={settings} />
+      {/* 1 ------------------------------------------------ cinematic hero */}
+      <VideoHero settings={settings} video={hero} />
+
+      {/* 2 ------------------------------------------ trust / introduction */}
       <TrustStrip settings={settings} />
-      <AboutPreview settings={settings} images={aboutImages} />
+
+      {/* 3 -------------------------- the client's message, in his own words --
+        Placed high on purpose: his own statement is the most direct thing the
+        site has to say, and it is what he asked visitors to read first. */}
       <HealerMessage settings={settings} />
 
-      {/* ------------------------------------------------ featured services */}
+      {/* 4 ---------------------------------------------- large featured video */}
+      {featured ? <FeaturedVideo video={featured} /> : null}
+
+      {/* 5 ----------------------------------------------- featured services */}
       <section className="relative bg-cream-100 py-20 lg:py-28">
         <div aria-hidden className="pattern-weave absolute inset-0 opacity-60" />
         <div className="container relative z-10">
@@ -115,9 +152,87 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* 6 ------------------------------------------- latest work video grid */}
+      <VideoShowcase videos={showcaseVideos} />
+
+      {/* 7 -------------------------------------- about, with authentic stills */}
+      <AboutPreview settings={settings} images={aboutImages} />
+
+      {/* 8 ------------------------------------ traditional practice, on video */}
+      {practiceVideo ? (
+        <VideoStory
+          video={practiceVideo}
+          eyebrow="Traditional practice"
+          title="Herbs, Preparation & Traditional Practice"
+          body={[
+            'Much of the work rests on plants — leaves, roots and bark gathered fresh and prepared the way they have been prepared in this part of Uganda for generations.',
+            'Nothing about it is hidden. The preparation happens in the open, in front of whoever has come, and the footage on this page was filmed exactly where the work takes place.',
+          ]}
+          points={[
+            'Fresh cuttings gathered and prepared on the day they are used',
+            'Carried out in the open, in front of the family who asked for it',
+            'Traditional practice — offered alongside, never in place of, medical care',
+          ]}
+          href="/services"
+          linkLabel="See the consultation areas"
+          side="left"
+          tone="dark"
+        />
+      ) : null}
+
+      {/* 9 -------------------------------------------------- video carousel */}
+      <VideoCarousel videos={pool} />
+
+      {/* 10 --------------------------- photo gallery, drawn from the footage */}
+      {galleryImages.length ? (
+        <section className="relative overflow-hidden bg-forest-950 py-20 lg:py-28">
+          <div aria-hidden className="pattern-diamond absolute inset-0 opacity-50" />
+          <div className="container relative z-10">
+            <SectionHeading
+              eyebrow="Photo gallery"
+              title="Moments From the Practice"
+              intro="Still photographs taken from Dr Salongo Hamuza's own recordings — the gatherings, the herbs, the homesteads and the people who came to watch."
+              tone="dark"
+            />
+            <div className="mt-14">
+              <MasonryGallery
+                items={galleryImages}
+                columnsClassName="columns-2 sm:columns-3 lg:columns-4"
+              />
+            </div>
+            <Reveal delay={0.1} className="mt-10 text-center">
+              <Link href="/gallery" className="btn-outline-gold">
+                Open the full gallery
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+            </Reveal>
+          </div>
+        </section>
+      ) : null}
+
+      {/* 11 --------------------------------- his own message, on video + why */}
+      {messageVideo ? (
+        <VideoStory
+          video={messageVideo}
+          eyebrow="Hear from him directly"
+          title="Dr Salongo Hamuza, In His Own Voice"
+          body={[
+            'Before deciding anything, it is worth simply hearing him speak. In this recording he explains who he is, the work he does and how anyone who needs him can make contact.',
+            'He speaks in his own language and in his own words, without a script — which is, in the end, the most honest introduction there is.',
+          ]}
+          href="/about"
+          linkLabel="Read his full story"
+          side="right"
+          tone="light"
+        />
+      ) : null}
+
+      {/* Routes the "what even is this" visitor into the cornerstone guides. */}
+      <GuideLinks />
+
       <WhyConsult />
 
-      {/* -------------------------------------------------------- our work */}
+      {/* ----------------------------------------- recorded work & activities */}
       {work.length ? (
         <section className="bg-cream-50 py-20 lg:py-28">
           <div className="container">
@@ -145,98 +260,9 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      {/* -------------------------------------------------- gallery preview */}
-      {galleryImages.length ? (
-        <section className="relative overflow-hidden bg-forest-950 py-20 lg:py-28">
-          <div aria-hidden className="pattern-diamond absolute inset-0 opacity-50" />
-          <div className="container relative z-10">
-            <SectionHeading
-              eyebrow="Photo gallery"
-              title="Moments From the Practice"
-              intro="Traditional items, herbs, gatherings and daily practice — a glimpse of the world Dr Salongo Hamuza works within."
-              tone="dark"
-            />
-            <div className="mt-14">
-              <MasonryGallery
-                items={galleryImages}
-                columnsClassName="columns-2 sm:columns-3 lg:columns-4"
-              />
-            </div>
-            <Reveal delay={0.1} className="mt-10 text-center">
-              <Link href="/gallery" className="btn-outline-gold">
-                Open the full gallery
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
-            </Reveal>
-          </div>
-        </section>
-      ) : null}
-
-      {/* -------------------------------------------------- featured video */}
-      {featuredVideo ? (
-        <section className="relative overflow-hidden bg-forest-900 py-20 lg:py-28">
-          <div aria-hidden className="pattern-diamond absolute inset-0 opacity-60" />
-          <div className="container relative z-10">
-            <div className="grid items-center gap-12 lg:grid-cols-12">
-              <Reveal className="lg:col-span-5">
-                <p className="eyebrow-light">
-                  <span aria-hidden className="h-px w-8 bg-gold-400/70" />
-                  Featured video
-                </p>
-                <h2 className="heading-lg mt-4 text-cream-100">{featuredVideo.title}</h2>
-                <span aria-hidden className="mt-6 block h-[3px] w-20 rounded-full bg-gold-sheen" />
-                {featuredVideo.description ? (
-                  <p className="mt-6 text-[1.0rem] leading-[1.9] text-cream-200/75">
-                    {featuredVideo.description}
-                  </p>
-                ) : null}
-                <Link
-                  href={`/videos/${featuredVideo.slug}`}
-                  className="btn-outline-gold mt-8"
-                >
-                  Watch on its own page
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
-              </Reveal>
-
-              <Reveal delay={0.12} className="lg:col-span-7">
-                <VideoPlayer video={featuredVideo} />
-              </Reveal>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* ---------------------------------------------------- latest videos */}
-      {latestVideos.length ? (
-        <section className="bg-forest-950 py-20 lg:py-24">
-          <div className="container">
-            <SectionHeading
-              eyebrow="Watch"
-              title="Latest Videos"
-              intro="Recordings shared by Dr Salongo Hamuza from his traditional practice and community activities."
-              tone="dark"
-            />
-            <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {latestVideos.map((video, i) => (
-                <Reveal key={video.id} delay={(i % 3) * 0.08}>
-                  <VideoCard video={video} />
-                </Reveal>
-              ))}
-            </div>
-            <Reveal delay={0.1} className="mt-12 text-center">
-              <Link href="/videos" className="btn-outline-gold">
-                All videos
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
-            </Reveal>
-          </div>
-        </section>
-      ) : null}
-
       <ApproachSection />
 
-      {/* ------------------------------------------------------ testimonials */}
+      {/* 12 ------------------------------------------------------ testimonials */}
       {testimonials.length ? (
         <section className="bg-cream-50 py-20 lg:py-28">
           <div className="container">
@@ -267,7 +293,7 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      {/* ------------------------------------------------------------- blog */}
+      {/* 13 ------------------------------------------------------------- blog */}
       {posts.length ? (
         <section className="bg-cream-100 py-20 lg:py-24">
           <div className="container">
@@ -293,7 +319,11 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <ConsultationCTA settings={settings} />
+      {/* 14 / 15 / 16 ------------------------- consultation, contact, notice */}
+      <ConsultationCTA
+        settings={settings}
+        backgroundImage={stills.find((s) => s.url.includes('community-gathering'))?.url}
+      />
       <ContactInfoSection settings={settings} />
       <DisclaimerSection settings={settings} />
     </>

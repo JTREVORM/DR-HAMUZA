@@ -2,22 +2,33 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Film, Play } from 'lucide-react';
 import type { VideoItem } from '@/lib/types';
-import { formatDate, videoThumbnail } from '@/lib/utils';
+import { cn, formatDate, videoThumbnail } from '@/lib/utils';
 
+/**
+ * The linking card used on the video index and anywhere a video should take the
+ * visitor to its own page. Portrait footage gets a taller card so the graded
+ * poster is not cropped down to a letterbox strip.
+ */
 export function VideoCard({ video, priority }: { video: VideoItem; priority?: boolean }) {
   const thumb = videoThumbnail(video);
+  const portrait = video.orientation === 'portrait';
 
   return (
     <article className="group card-dark h-full">
       <Link href={`/videos/${video.slug}`} className="block">
-        <div className="relative aspect-video overflow-hidden">
+        <div
+          className={cn(
+            'relative overflow-hidden',
+            portrait ? 'aspect-[4/5]' : 'aspect-video'
+          )}
+        >
           {thumb ? (
             <Image
               src={thumb}
               alt={video.title}
               fill
               sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
-              className="lift-img object-cover"
+              className="lift-img object-cover object-center"
               priority={priority}
             />
           ) : (
@@ -27,10 +38,10 @@ export function VideoCard({ video, priority }: { video: VideoItem; priority?: bo
           )}
           <span
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-forest-950/80 to-transparent transition-opacity duration-500 group-hover:opacity-70"
+            className="absolute inset-0 bg-gradient-to-t from-forest-950/85 via-forest-950/15 to-transparent transition-opacity duration-500 group-hover:opacity-80"
           />
           <span className="absolute inset-0 flex items-center justify-center">
-            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-gold-300/70 bg-forest-950/55 text-gold-200 backdrop-blur-sm transition duration-500 group-hover:scale-110 group-hover:bg-gold-400 group-hover:text-forest-950">
+            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-gold-300/70 bg-forest-950/50 text-gold-200 backdrop-blur-sm transition duration-500 group-hover:scale-110 group-hover:bg-gold-400 group-hover:text-forest-950">
               <Play className="ml-0.5 h-6 w-6 fill-current" aria-hidden />
             </span>
           </span>
