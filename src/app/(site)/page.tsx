@@ -46,6 +46,10 @@ export async function generateMetadata(): Promise<Metadata> {
     title: settings.default_seo_title || `${settings.site_name} | ${settings.tagline}`,
     description: settings.default_seo_description || settings.short_description,
     path: '/',
+    image: '/images/dr-salongo-hamuza-traditional-healer-uganda.webp',
+    imageWidth: 1200,
+    imageHeight: 630,
+    imageType: 'image/webp',
   });
 }
 
