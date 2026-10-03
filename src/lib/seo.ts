@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/env';
 import type { SiteSettings } from '@/lib/types';
-import { absoluteUrl } from '@/lib/utils';
+import { absoluteUrl, contactPhones, formatPhone } from '@/lib/utils';
 
 interface BuildMetadataArgs {
   settings: SiteSettings;
@@ -79,7 +79,14 @@ export function localBusinessSchema(settings: SiteSettings) {
     name: settings.site_name,
     description: settings.short_description,
     url: SITE_URL,
-    telephone: settings.phone,
+    // Valid international (E.164-style) numbers, e.g. +256777172119.
+    telephone: formatPhone(settings.phone),
+    contactPoint: contactPhones(settings).map((telephone) => ({
+      '@type': 'ContactPoint',
+      telephone,
+      contactType: 'customer service',
+      areaServed: 'UG',
+    })),
     image: absoluteUrl(SITE_URL, settings.logo_url || '/brand/logo.webp'),
     logo: absoluteUrl(SITE_URL, settings.logo_url || '/brand/logo.webp'),
     ...(settings.email ? { email: settings.email } : {}),
@@ -108,7 +115,7 @@ export function personSchema(settings: SiteSettings) {
     description: settings.short_description,
     url: `${SITE_URL}/about`,
     image: absoluteUrl(SITE_URL, settings.logo_url || '/brand/logo.webp'),
-    telephone: settings.phone,
+    telephone: formatPhone(settings.phone),
     worksFor: { '@id': `${SITE_URL}/#business` },
   };
 }

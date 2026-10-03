@@ -42,20 +42,36 @@ export function digitsOnly(phone: string) {
 }
 
 /**
- * Builds a wa.me link. Ugandan local numbers (0777…) are normalised to the
- * international 256 form that WhatsApp requires.
+ * Normalises a Ugandan phone number to international form, e.g. `0777172119`,
+ * `256777172119` and `+256 777 172 119` all become `+256777172119`. Numbers that
+ * already carry another country code are kept as they are. Returns '' when
+ * there is nothing usable, so callers can simply skip empty values.
  */
+export function formatPhone(phone: string) {
+  let digits = digitsOnly(phone);
+  if (!digits) return '';
+  if (digits.startsWith('00')) digits = digits.slice(2);
+  else if (digits.startsWith('0')) digits = `256${digits.slice(1)}`;
+  else if (!digits.startsWith('256') && digits.length === 9) digits = `256${digits}`;
+  return `+${digits}`;
+}
+
+/** The phone numbers to show, primary first, formatted, with blanks and duplicates removed. */
+export function contactPhones(settings: { phone: string; phone_secondary?: string }) {
+  return [settings.phone, settings.phone_secondary ?? '']
+    .map(formatPhone)
+    .filter((number, index, all) => number && all.indexOf(number) === index);
+}
+
+/** Builds a wa.me link. WhatsApp needs the number as digits with the country code. */
 export function whatsappHref(whatsapp: string, message: string) {
-  let number = digitsOnly(whatsapp);
-  if (number.startsWith('0')) number = `256${number.slice(1)}`;
-  if (number.startsWith('256') === false && number.length === 9) number = `256${number}`;
+  const number = formatPhone(whatsapp).slice(1);
   const text = encodeURIComponent(message || '');
   return `https://wa.me/${number}${text ? `?text=${text}` : ''}`;
 }
 
 export function telHref(phone: string) {
-  const number = digitsOnly(phone);
-  return `tel:${number.startsWith('0') ? number : `+${number}`}`;
+  return `tel:${formatPhone(phone)}`;
 }
 
 export function excerptFrom(text: string, length = 160) {

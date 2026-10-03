@@ -10,6 +10,7 @@ export interface SiteSettings {
   tagline: string;
   short_description: string;
   phone: string;
+  phone_secondary: string;
   whatsapp: string;
   email: string;
   location: string;

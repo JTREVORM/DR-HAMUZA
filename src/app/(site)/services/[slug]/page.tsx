@@ -13,7 +13,7 @@ import { DisclaimerSection } from '@/components/home/DisclaimerSection';
 
 import { getServiceBySlug, getServices, getSettings } from '@/lib/queries';
 import { breadcrumbSchema, buildMetadata, serviceSchema } from '@/lib/seo';
-import { renderRichText, telHref, whatsappHref } from '@/lib/utils';
+import { contactPhones, renderRichText, telHref, whatsappHref } from '@/lib/utils';
 
 export const revalidate = 600;
 
@@ -84,10 +84,12 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         image={service.cover_image}
       >
         <div className="mt-9 flex flex-wrap gap-3">
-          <a href={telHref(settings.phone)} className="btn-gold">
-            <Phone className="h-4 w-4" aria-hidden />
-            Call {settings.phone}
-          </a>
+          {contactPhones(settings).map((number) => (
+            <a key={number} href={telHref(number)} className="btn-gold">
+              <Phone className="h-4 w-4" aria-hidden />
+              Call {number}
+            </a>
+          ))}
           <a href={wa} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">
             <MessageCircle className="h-4 w-4" aria-hidden />
             Ask about this
@@ -174,12 +176,13 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                     Describe your situation in your own words. You can decide afterwards whether
                     you wish to come.
                   </p>
-                  <p className="mt-5 font-display text-2xl text-gold-300">{settings.phone}</p>
                   <div className="mt-5 space-y-2.5">
-                    <a href={telHref(settings.phone)} className="btn-gold w-full">
-                      <Phone className="h-4 w-4" aria-hidden />
-                      Call now
-                    </a>
+                    {contactPhones(settings).map((number) => (
+                      <a key={number} href={telHref(number)} className="btn-gold w-full">
+                        <Phone className="h-4 w-4" aria-hidden />
+                        Call {number}
+                      </a>
+                    ))}
                     <a
                       href={wa}
                       target="_blank"

@@ -3,6 +3,7 @@ import { HeartHandshake, Lock, Phone, Users } from 'lucide-react';
 import { Reveal } from '@/components/ui/Reveal';
 import { Counter } from '@/components/ui/Counter';
 import type { SiteSettings } from '@/lib/types';
+import { contactPhones, telHref } from '@/lib/utils';
 
 /**
  * Introduction strip beneath the hero. Statistics only appear when the admin
@@ -52,9 +53,18 @@ export function TrustStrip({ settings }: { settings: SiteSettings }) {
               <p className="text-[0.70rem] font-semibold uppercase tracking-[0.24em] text-gold-400">
                 Speak to Dr Salongo Hamuza
               </p>
-              <p className="mt-4 font-display text-3xl tracking-wide text-cream-100">
-                {settings.phone}
-              </p>
+              <div className="mt-4 flex flex-col">
+                {contactPhones(settings).map((number) => (
+                  <a
+                    key={number}
+                    href={telHref(number)}
+                    aria-label={`Call ${number}`}
+                    className="py-0.5 font-display text-2xl tracking-wide text-cream-100 transition hover:text-gold-300 sm:text-3xl"
+                  >
+                    {number}
+                  </a>
+                ))}
+              </div>
               <p className="mt-3 flex items-center gap-2 text-[0.84rem] text-cream-200/70">
                 <Lock className="h-4 w-4 text-gold-400" aria-hidden />
                 Every enquiry is treated in confidence

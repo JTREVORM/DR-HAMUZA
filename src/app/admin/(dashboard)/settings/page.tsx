@@ -79,19 +79,37 @@ export default function AdminSettingsPage() {
                 className="field"
               />
             </Field>
-            <Field label="Phone number" required hint="Shown everywhere on the website.">
+            <Field
+              label="Primary phone number"
+              required
+              hint="Shown everywhere on the website. Use international format, e.g. +256777172119 — a local 07… number is converted automatically."
+            >
               <input
                 type="tel"
                 value={settings.phone}
                 onChange={(e) => set('phone', e.target.value)}
                 required
                 maxLength={40}
+                placeholder="+256777172119"
+                className="field"
+              />
+            </Field>
+            <Field
+              label="Second phone number"
+              hint="Optional. Shown beside the primary number everywhere. Leave blank to show only one."
+            >
+              <input
+                type="tel"
+                value={settings.phone_secondary}
+                onChange={(e) => set('phone_secondary', e.target.value)}
+                maxLength={40}
+                placeholder="+256744937529"
                 className="field"
               />
             </Field>
             <Field
               label="WhatsApp number"
-              hint="Local numbers starting 07… are converted to the international 256… form automatically."
+              hint="Used for every WhatsApp button. Usually the same as the primary number."
             >
               <input
                 type="tel"

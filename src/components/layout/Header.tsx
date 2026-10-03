@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, MessageCircle, Phone, X } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { NAV_ITEMS } from '@/components/layout/nav-items';
-import { cn, telHref, whatsappHref } from '@/lib/utils';
+import { cn, contactPhones, telHref, whatsappHref } from '@/lib/utils';
 import type { SiteSettings } from '@/lib/types';
 
 export function Header({ settings }: { settings: SiteSettings }) {
@@ -37,6 +37,7 @@ export function Header({ settings }: { settings: SiteSettings }) {
     href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   const wa = whatsappHref(settings.whatsapp || settings.phone, settings.whatsapp_message);
+  const phones = contactPhones(settings);
 
   return (
     <>
@@ -78,14 +79,14 @@ export function Header({ settings }: { settings: SiteSettings }) {
             </span>
           </Link>
 
-          <nav aria-label="Primary" className="hidden items-center gap-0.5 xl:flex">
+          <nav aria-label="Primary" className="hidden items-center xl:flex">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={isActive(item.href) ? 'page' : undefined}
                 className={cn(
-                  'relative whitespace-nowrap rounded-full px-3 py-2 text-[0.82rem] font-medium tracking-wide transition-colors',
+                  'relative whitespace-nowrap rounded-full px-2.5 py-2 text-[0.82rem] font-medium tracking-wide transition-colors',
                   isActive(item.href)
                     ? 'text-gold-300'
                     : 'text-cream-100/80 hover:text-gold-200'
@@ -104,21 +105,31 @@ export function Header({ settings }: { settings: SiteSettings }) {
           </nav>
 
           <div className="flex items-center gap-2">
-            <a
-              href={telHref(settings.phone)}
-              className="hidden items-center gap-2 rounded-full border border-gold-400/50 px-4 py-2.5 text-[0.8rem] font-semibold text-gold-200 transition hover:bg-gold-400/12 md:inline-flex"
-            >
-              <Phone className="h-4 w-4" aria-hidden />
-              <span>{settings.phone}</span>
-            </a>
+            <div className="hidden items-center gap-2.5 rounded-2xl border border-gold-400/50 px-4 py-1.5 md:flex">
+              <Phone className="h-4 w-4 shrink-0 text-gold-300" aria-hidden />
+              <span className="flex flex-col leading-tight">
+                {phones.map((number) => (
+                  <a
+                    key={number}
+                    href={telHref(number)}
+                    aria-label={`Call ${number}`}
+                    className="py-0.5 text-[0.76rem] font-semibold tracking-wide text-gold-200 transition hover:text-gold-100"
+                  >
+                    {number}
+                  </a>
+                ))}
+              </span>
+            </div>
             <a
               href={wa}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden items-center gap-2 rounded-full bg-[#1FA855] px-4 py-2.5 text-[0.8rem] font-semibold text-white transition hover:bg-[#199348] sm:inline-flex"
+              aria-label="Chat on WhatsApp"
+              className="hidden h-11 items-center gap-2 rounded-full bg-[#1FA855] px-3.5 text-[0.8rem] font-semibold text-white transition hover:bg-[#199348] sm:inline-flex"
             >
               <MessageCircle className="h-4 w-4" aria-hidden />
-              <span>WhatsApp</span>
+              {/* Icon-only while the full navigation is showing; the label returns on tablets, where it is collapsed. */}
+              <span className="hidden md:inline xl:hidden">WhatsApp</span>
             </a>
 
             <button
@@ -200,10 +211,12 @@ export function Header({ settings }: { settings: SiteSettings }) {
               </ul>
 
               <div className="space-y-2.5 border-t border-gold-500/15 p-5">
-                <a href={telHref(settings.phone)} className="btn-gold w-full">
-                  <Phone className="h-4 w-4" aria-hidden />
-                  Call {settings.phone}
-                </a>
+                {phones.map((number) => (
+                  <a key={number} href={telHref(number)} className="btn-gold w-full">
+                    <Phone className="h-4 w-4" aria-hidden />
+                    Call {number}
+                  </a>
+                ))}
                 <a
                   href={wa}
                   target="_blank"

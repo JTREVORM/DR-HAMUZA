@@ -4,7 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Logo } from '@/components/ui/Logo';
 import { getSettings } from '@/lib/queries';
-import { telHref } from '@/lib/utils';
+import { contactPhones, telHref } from '@/lib/utils';
 
 export default async function NotFound() {
   const settings = await getSettings();
@@ -28,10 +28,12 @@ export default async function NotFound() {
                 <Home className="h-4 w-4" aria-hidden />
                 Back to homepage
               </Link>
-              <a href={telHref(settings.phone)} className="btn-outline-gold">
-                <Phone className="h-4 w-4" aria-hidden />
-                Call {settings.phone}
-              </a>
+              {contactPhones(settings).map((number) => (
+                <a key={number} href={telHref(number)} className="btn-outline-gold">
+                  <Phone className="h-4 w-4" aria-hidden />
+                  Call {number}
+                </a>
+              ))}
             </div>
           </div>
         </section>

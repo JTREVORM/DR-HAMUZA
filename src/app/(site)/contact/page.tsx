@@ -9,7 +9,7 @@ import { DisclaimerSection } from '@/components/home/DisclaimerSection';
 
 import { getSettings } from '@/lib/queries';
 import { breadcrumbSchema, buildMetadata, localBusinessSchema } from '@/lib/seo';
-import { telHref, whatsappHref } from '@/lib/utils';
+import { contactPhones, telHref, whatsappHref } from '@/lib/utils';
 
 export const revalidate = 600;
 
@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     settings,
     title: 'Contact Dr Salongo Hamuza — Traditional Healer in Uganda',
-    description: `Contact Dr Salongo Hamuza, ${settings.tagline.toLowerCase()} in Uganda, on ${settings.phone}. Call, send a WhatsApp message, or use the confidential enquiry form.`,
+    description: `Contact Dr Salongo Hamuza, ${settings.tagline.toLowerCase()} in Uganda, on ${contactPhones(settings).join(' or ')}. Call, send a WhatsApp message, or use the confidential enquiry form.`,
     path: '/contact',
   });
 }
@@ -35,6 +35,7 @@ export default async function ContactPage({
 }) {
   const [settings, params] = await Promise.all([getSettings(), searchParams]);
   const wa = whatsappHref(settings.whatsapp || settings.phone, settings.whatsapp_message);
+  const phones = contactPhones(settings);
 
   return (
     <>
@@ -47,10 +48,12 @@ export default async function ContactPage({
         crumbs={CRUMBS}
       >
         <div className="mt-9 flex flex-wrap gap-3">
-          <a href={telHref(settings.phone)} className="btn-gold">
-            <Phone className="h-4 w-4" aria-hidden />
-            Call {settings.phone}
-          </a>
+          {phones.map((number) => (
+            <a key={number} href={telHref(number)} className="btn-gold">
+              <Phone className="h-4 w-4" aria-hidden />
+              Call {number}
+            </a>
+          ))}
           <a href={wa} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">
             <MessageCircle className="h-4 w-4" aria-hidden />
             WhatsApp Now
@@ -81,22 +84,27 @@ export default async function ContactPage({
                 <Reveal className="rounded-2xl border border-gold-400/40 bg-gradient-to-br from-forest-900 to-forest-950 p-7">
                   <h2 className="font-display text-xl text-cream-100">Reach him directly</h2>
 
-                  <a
-                    href={telHref(settings.phone)}
-                    className="group mt-6 flex items-center gap-4 rounded-xl border border-gold-500/25 p-4 transition hover:border-gold-400 hover:bg-gold-400/8"
-                  >
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold-400/15 text-gold-300 transition group-hover:bg-gold-400 group-hover:text-forest-950">
-                      <Phone className="h-5 w-5" aria-hidden />
-                    </span>
-                    <span>
-                      <span className="block text-[0.70rem] uppercase tracking-[0.2em] text-gold-400/80">
-                        Telephone
+                  {phones.map((number, index) => (
+                    <a
+                      key={number}
+                      href={telHref(number)}
+                      className={`group flex items-center gap-4 rounded-xl border border-gold-500/25 p-4 transition hover:border-gold-400 hover:bg-gold-400/8 ${
+                        index === 0 ? 'mt-6' : 'mt-3'
+                      }`}
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold-400/15 text-gold-300 transition group-hover:bg-gold-400 group-hover:text-forest-950">
+                        <Phone className="h-5 w-5" aria-hidden />
                       </span>
-                      <span className="mt-0.5 block font-display text-xl text-cream-100">
-                        {settings.phone}
+                      <span>
+                        <span className="block text-[0.70rem] uppercase tracking-[0.2em] text-gold-400/80">
+                          {index === 0 ? 'Telephone' : 'Second line'}
+                        </span>
+                        <span className="mt-0.5 block font-display text-xl text-cream-100">
+                          {number}
+                        </span>
                       </span>
-                    </span>
-                  </a>
+                    </a>
+                  ))}
 
                   <a
                     href={wa}

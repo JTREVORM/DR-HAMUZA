@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp, CalendarCheck, MessageCircle, Phone } from 'lucide-react';
-import { telHref, whatsappHref } from '@/lib/utils';
+import { cn, contactPhones, telHref, whatsappHref } from '@/lib/utils';
 import type { SiteSettings } from '@/lib/types';
 
 /**
@@ -14,6 +14,9 @@ import type { SiteSettings } from '@/lib/types';
 export function FloatingActions({ settings }: { settings: SiteSettings }) {
   const [showTop, setShowTop] = useState(false);
   const wa = whatsappHref(settings.whatsapp || settings.phone, settings.whatsapp_message);
+  const phones = contactPhones(settings);
+  // With two numbers the phone bar needs a second row, so everything above it moves up.
+  const twoRows = phones.length > 1;
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 700);
@@ -23,7 +26,12 @@ export function FloatingActions({ settings }: { settings: SiteSettings }) {
 
   return (
     <>
-      <div className="pointer-events-none fixed bottom-[5.25rem] right-4 z-[95] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+      <div
+        className={cn(
+          'pointer-events-none fixed right-4 z-[95] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6',
+          twoRows ? 'bottom-[8rem]' : 'bottom-[5.25rem]'
+        )}
+      >
         <AnimatePresence>
           {showTop ? (
             <motion.button
@@ -55,11 +63,18 @@ export function FloatingActions({ settings }: { settings: SiteSettings }) {
 
       {/* Sticky mobile contact bar */}
       <div className="fixed inset-x-0 bottom-0 z-[90] border-t border-gold-500/25 bg-forest-950/95 px-3 py-2.5 backdrop-blur-lg sm:hidden">
-        <div className="grid grid-cols-3 gap-2">
-          <a href={telHref(settings.phone)} className="btn-gold !px-2 text-[0.74rem]">
-            <Phone className="h-4 w-4" aria-hidden />
-            Call
-          </a>
+        <div className={cn('grid gap-2', twoRows ? 'grid-cols-2' : 'grid-cols-3')}>
+          {phones.map((number) => (
+            <a
+              key={number}
+              href={telHref(number)}
+              aria-label={`Call ${number}`}
+              className="btn-gold !px-2 text-[0.74rem]"
+            >
+              <Phone className="h-4 w-4 shrink-0" aria-hidden />
+              {twoRows ? number : 'Call'}
+            </a>
+          ))}
           <a
             href={wa}
             target="_blank"
@@ -79,7 +94,7 @@ export function FloatingActions({ settings }: { settings: SiteSettings }) {
         </div>
       </div>
       {/* Spacer so the sticky bar never covers page content on phones */}
-      <div aria-hidden className="h-[68px] sm:hidden" />
+      <div aria-hidden className={cn('sm:hidden', twoRows ? 'h-[120px]' : 'h-[68px]')} />
     </>
   );
 }

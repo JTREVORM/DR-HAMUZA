@@ -12,8 +12,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   tagline: 'Professional Traditional Healer',
   short_description:
     'Dr Salongo Hamuza is a professional traditional healer from Uganda offering traditional and spiritual consultation to people facing personal, family, relationship, business and other difficulties in life.',
-  phone: '0777172119',
-  whatsapp: '0777172119',
+  phone: '+256777172119',
+  phone_secondary: '+256744937529',
+  whatsapp: '+256777172119',
   email: '',
   location: 'Uganda',
   map_embed_url: '',

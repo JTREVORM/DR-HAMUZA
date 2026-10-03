@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { LegalPage } from '@/components/layout/LegalPage';
 import { getSettings } from '@/lib/queries';
 import { buildMetadata } from '@/lib/seo';
+import { contactPhones, telHref } from '@/lib/utils';
 
 export const revalidate = 3600;
 
@@ -116,7 +117,12 @@ export default async function DisclaimerPage() {
       <h2>Questions</h2>
       <p>
         If anything in this notice is unclear, telephone{' '}
-        <a href={`tel:${settings.phone}`}>{settings.phone}</a> or use the{' '}
+        {contactPhones(settings).map((number, index) => (
+          <span key={number}>
+            {index > 0 ? ' or ' : null}
+            <a href={telHref(number)}>{number}</a>
+          </span>
+        ))} or use the{' '}
         <Link href="/contact">contact page</Link>, and it will be explained.
       </p>
     </LegalPage>

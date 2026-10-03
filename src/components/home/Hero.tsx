@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, MessageCircle, Phone, ShieldCheck, Sparkles } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
-import { telHref, whatsappHref } from '@/lib/utils';
+import { contactPhones, telHref, whatsappHref } from '@/lib/utils';
 import type { SiteSettings } from '@/lib/types';
 
 /** Deterministic positions so the server and client render the same particles. */
@@ -20,6 +20,7 @@ const PARTICLES = Array.from({ length: 14 }, (_, i) => ({
 
 export function Hero({ settings }: { settings: SiteSettings }) {
   const wa = whatsappHref(settings.whatsapp || settings.phone, settings.whatsapp_message);
+  const phones = contactPhones(settings);
 
   const rotating = useMemo(
     () =>
@@ -161,23 +162,29 @@ export function Hero({ settings }: { settings: SiteSettings }) {
               transition={{ duration: 0.8, delay: 0.45 }}
               className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4"
             >
-              <a
-                href={telHref(settings.phone)}
-                className="group flex items-center gap-3.5"
-                aria-label={`Call Dr Salongo Hamuza on ${settings.phone}`}
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gold-400/50 bg-gold-400/10 text-gold-300 transition group-hover:bg-gold-400 group-hover:text-forest-950">
-                  <Phone className="h-5 w-5" aria-hidden />
+              <div className="flex items-center gap-3.5">
+                <span
+                  aria-hidden
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold-400/50 bg-gold-400/10 text-gold-300"
+                >
+                  <Phone className="h-5 w-5" />
                 </span>
                 <span className="flex flex-col leading-tight">
                   <span className="text-[0.70rem] uppercase tracking-[0.22em] text-gold-400/80">
                     Call directly
                   </span>
-                  <span className="font-display text-xl tracking-wide text-cream-100">
-                    {settings.phone}
-                  </span>
+                  {phones.map((number) => (
+                    <a
+                      key={number}
+                      href={telHref(number)}
+                      aria-label={`Call Dr Salongo Hamuza on ${number}`}
+                      className="py-0.5 font-display text-xl tracking-wide text-cream-100 transition hover:text-gold-300"
+                    >
+                      {number}
+                    </a>
+                  ))}
                 </span>
-              </a>
+              </div>
 
               <span className="flex items-center gap-2.5 text-[0.8rem] text-cream-200/65">
                 <ShieldCheck className="h-4 w-4 text-gold-400" aria-hidden />

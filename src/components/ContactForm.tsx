@@ -117,7 +117,7 @@ export function ContactForm({ defaultType }: { defaultType?: string }) {
             inputMode="tel"
             autoComplete="tel"
             maxLength={40}
-            placeholder="07XX XXX XXX"
+            placeholder="+256 7XX XXX XXX"
             className="field"
             {...invalid('phone')}
           />

@@ -49,6 +49,11 @@ cp .env.example .env.local
    [`supabase/schema.sql`](supabase/schema.sql) and run it. This creates every
    table, the `media` storage bucket, and all Row Level Security policies. It is
    safe to run again later.
+   **Upgrading an existing database?** Re-run the same file. It adds the new
+   `phone_secondary` column and converts a phone or WhatsApp number still stored
+   in the old local form (`0777172119`) to international format
+   (`+256777172119`). Numbers you have already edited are left alone. Until it
+   has been run, saving Site Settings will fail because the column is missing.
 3. Optionally run [`supabase/seed.sql`](supabase/seed.sql) to load the thirteen
    consultation areas and some starter blog categories into the database so they
    become editable. (The same thing can be done from the dashboard: **Services →
@@ -173,7 +178,7 @@ never autoplay with sound.
 ## Editing content
 
 Everything the client can change lives in the dashboard. Nothing about the
-business — the phone number, the WhatsApp number, the disclaimers, the hero
+business — the two phone numbers, the WhatsApp number, the disclaimers, the hero
 text, the social links — is written into the code; it all comes from
 **Admin → Site Settings**.
 

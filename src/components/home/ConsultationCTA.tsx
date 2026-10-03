@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, MessageCircle, Phone } from 'lucide-react';
 import { Reveal } from '@/components/ui/Reveal';
 import { Logo } from '@/components/ui/Logo';
-import { telHref, whatsappHref } from '@/lib/utils';
+import { contactPhones, telHref, whatsappHref } from '@/lib/utils';
 import type { SiteSettings } from '@/lib/types';
 
 export function ConsultationCTA({ settings }: { settings: SiteSettings }) {
@@ -34,10 +34,12 @@ export function ConsultationCTA({ settings }: { settings: SiteSettings }) {
           </p>
 
           <div className="mt-9 flex flex-wrap justify-center gap-3">
-            <a href={telHref(settings.phone)} className="btn-gold">
-              <Phone className="h-4 w-4" aria-hidden />
-              Call {settings.phone}
-            </a>
+            {contactPhones(settings).map((number) => (
+              <a key={number} href={telHref(number)} className="btn-gold">
+                <Phone className="h-4 w-4" aria-hidden />
+                Call {number}
+              </a>
+            ))}
             <a href={wa} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">
               <MessageCircle className="h-4 w-4" aria-hidden />
               WhatsApp Now

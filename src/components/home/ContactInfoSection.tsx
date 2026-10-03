@@ -2,25 +2,25 @@ import Link from 'next/link';
 import { Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { telHref, whatsappHref } from '@/lib/utils';
+import { contactPhones, formatPhone, telHref, whatsappHref } from '@/lib/utils';
 import type { SiteSettings } from '@/lib/types';
 
 export function ContactInfoSection({ settings }: { settings: SiteSettings }) {
   const wa = whatsappHref(settings.whatsapp || settings.phone, settings.whatsapp_message);
 
   const cards = [
-    {
+    ...contactPhones(settings).map((number, index) => ({
       icon: Phone,
-      label: 'Telephone',
-      value: settings.phone,
-      href: telHref(settings.phone),
-      note: 'Call to describe your situation',
+      label: index === 0 ? 'Telephone' : 'Second line',
+      value: number,
+      href: telHref(number),
+      note: index === 0 ? 'Call to describe your situation' : 'An alternative number to call',
       external: false,
-    },
+    })),
     {
       icon: MessageCircle,
       label: 'WhatsApp',
-      value: settings.whatsapp || settings.phone,
+      value: formatPhone(settings.whatsapp || settings.phone),
       href: wa,
       note: 'Send a private message any time',
       external: true,
@@ -63,7 +63,7 @@ export function ContactInfoSection({ settings }: { settings: SiteSettings }) {
           intro="Dr Salongo Hamuza can be reached directly by telephone or WhatsApp. Every enquiry is treated privately."
         />
 
-        <div className="mx-auto mt-14 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto mt-14 flex max-w-5xl flex-wrap justify-center gap-5">
           {cards.map((card, i) => {
             const inner = (
               <>
@@ -81,7 +81,11 @@ export function ContactInfoSection({ settings }: { settings: SiteSettings }) {
             );
 
             return (
-              <Reveal key={card.label} delay={i * 0.07}>
+              <Reveal
+                key={card.label}
+                delay={i * 0.07}
+                className="w-full sm:w-[calc(50%-0.625rem)] lg:w-[calc(25%-0.9375rem)]"
+              >
                 {card.href ? (
                   <a
                     href={card.href}

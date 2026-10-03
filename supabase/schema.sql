@@ -80,8 +80,9 @@ create table if not exists public.site_settings (
   site_name             text    not null default 'Dr Salongo Hamuza',
   tagline               text    not null default 'Professional Traditional Healer',
   short_description     text    not null default '',
-  phone                 text    not null default '0777172119',
-  whatsapp              text    not null default '256777172119',
+  phone                 text    not null default '+256777172119',
+  phone_secondary       text    not null default '+256744937529',
+  whatsapp              text    not null default '+256777172119',
   email                 text    default '',
   location              text    default 'Uganda',
   map_embed_url         text    default '',
@@ -119,6 +120,16 @@ create table if not exists public.site_settings (
 );
 
 insert into public.site_settings (id) values (true) on conflict (id) do nothing;
+
+-- Upgrade path for databases created before the second phone number existed.
+-- Safe to re-run: the column is only added once, and only numbers still in the
+-- old local or bare-digits form are converted to international format, so
+-- anything the admin has since edited is left alone.
+alter table public.site_settings
+  add column if not exists phone_secondary text not null default '+256744937529';
+
+update public.site_settings set phone = '+256777172119' where phone in ('0777172119', '256777172119');
+update public.site_settings set whatsapp = '+256777172119' where whatsapp in ('0777172119', '256777172119');
 
 -- ---------------------------------------------------------------- services --
 

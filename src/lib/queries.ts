@@ -38,6 +38,12 @@ function mergeSettings(row: unknown): SiteSettings {
   for (const key of Object.keys(DEFAULT_SETTINGS)) {
     const value = row[key];
     if (value === null || value === undefined) continue;
+    // A blank optional number is a deliberate "none", not a missing value, so it
+    // must not fall back to the bundled default.
+    if (key === 'phone_secondary' && typeof value === 'string') {
+      merged[key] = value.trim();
+      continue;
+    }
     if (typeof value === 'string' && value.trim() === '') continue;
     if (Array.isArray(value) && value.length === 0) continue;
     merged[key] = value;

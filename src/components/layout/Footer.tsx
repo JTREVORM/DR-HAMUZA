@@ -3,7 +3,7 @@ import { Facebook, Instagram, Mail, MapPin, MessageCircle, Phone, Youtube } from
 import { Logo } from '@/components/ui/Logo';
 import { LEGAL_ITEMS, NAV_ITEMS } from '@/components/layout/nav-items';
 import { getBlogPosts, getServices, getSettings } from '@/lib/queries';
-import { telHref, whatsappHref } from '@/lib/utils';
+import { contactPhones, telHref, whatsappHref } from '@/lib/utils';
 
 function TikTokIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -30,6 +30,7 @@ export async function Footer() {
 
   const year = new Date().getFullYear();
   const wa = whatsappHref(settings.whatsapp || settings.phone, settings.whatsapp_message);
+  const phones = contactPhones(settings);
 
   const socials = [
     { href: settings.facebook_url, label: 'Facebook', Icon: Facebook },
@@ -125,15 +126,17 @@ export async function Footer() {
           <div className="lg:col-span-3">
             <h2 className="mb-5 font-display text-base text-gold-300">Get in Touch</h2>
             <ul className="space-y-3.5 text-sm">
-              <li>
-                <a
-                  href={telHref(settings.phone)}
-                  className="flex items-start gap-3 py-1.5 transition hover:text-gold-200"
-                >
-                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
-                  <span className="font-semibold tracking-wide">{settings.phone}</span>
-                </a>
-              </li>
+              {phones.map((number) => (
+                <li key={number}>
+                  <a
+                    href={telHref(number)}
+                    className="flex items-start gap-3 py-1.5 transition hover:text-gold-200"
+                  >
+                    <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" aria-hidden />
+                    <span className="font-semibold tracking-wide">{number}</span>
+                  </a>
+                </li>
+              ))}
               <li>
                 <a
                   href={wa}

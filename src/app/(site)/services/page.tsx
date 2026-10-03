@@ -12,7 +12,7 @@ import { DisclaimerSection } from '@/components/home/DisclaimerSection';
 import { getServices, getSettings } from '@/lib/queries';
 import { breadcrumbSchema, buildMetadata } from '@/lib/seo';
 import { SITE_URL } from '@/lib/env';
-import { telHref, whatsappHref } from '@/lib/utils';
+import { contactPhones, telHref, whatsappHref } from '@/lib/utils';
 
 export const revalidate = 600;
 
@@ -59,10 +59,12 @@ export default async function ServicesPage() {
         crumbs={CRUMBS}
       >
         <div className="mt-9 flex flex-wrap gap-3">
-          <a href={telHref(settings.phone)} className="btn-gold">
-            <Phone className="h-4 w-4" aria-hidden />
-            Call {settings.phone}
-          </a>
+          {contactPhones(settings).map((number) => (
+            <a key={number} href={telHref(number)} className="btn-gold">
+              <Phone className="h-4 w-4" aria-hidden />
+              Call {number}
+            </a>
+          ))}
           <a href={wa} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">
             <MessageCircle className="h-4 w-4" aria-hidden />
             WhatsApp Now

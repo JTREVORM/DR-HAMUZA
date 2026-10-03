@@ -15,7 +15,7 @@ import { ApproachSection } from '@/components/home/ApproachSection';
 
 import { getGalleries, getSettings } from '@/lib/queries';
 import { breadcrumbSchema, buildMetadata, personSchema } from '@/lib/seo';
-import { renderRichText, telHref, whatsappHref } from '@/lib/utils';
+import { contactPhones, renderRichText, telHref, whatsappHref } from '@/lib/utils';
 import { TRUST_POINTS } from '@/content/site-defaults';
 
 export const revalidate = 600;
@@ -132,12 +132,13 @@ export default async function AboutPage() {
                   <p className="text-[0.70rem] font-semibold uppercase tracking-[0.22em] text-gold-400">
                     Speak with him directly
                   </p>
-                  <p className="mt-3 font-display text-2xl text-cream-100">{settings.phone}</p>
                   <div className="mt-5 space-y-2.5">
-                    <a href={telHref(settings.phone)} className="btn-gold w-full">
-                      <Phone className="h-4 w-4" aria-hidden />
-                      Call now
-                    </a>
+                    {contactPhones(settings).map((number) => (
+                      <a key={number} href={telHref(number)} className="btn-gold w-full">
+                        <Phone className="h-4 w-4" aria-hidden />
+                        Call {number}
+                      </a>
+                    ))}
                     <a
                       href={wa}
                       target="_blank"
