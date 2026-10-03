@@ -1,31 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import { Cinzel, Cormorant_Garamond, Outfit } from 'next/font/google';
 import './globals.css';
 
 import { getSettings } from '@/lib/queries';
 import { SITE_URL } from '@/lib/env';
-
-const display = Cinzel({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-display',
-  display: 'swap',
-});
-
-const serif = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-serif',
-  display: 'swap',
-});
-
-const sans = Outfit({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-sans',
-  display: 'swap',
-});
 
 export const viewport: Viewport = {
   themeColor: '#0C3323',
@@ -70,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-UG" className={`${display.variable} ${serif.variable} ${sans.variable}`}>
+    <html lang="en-UG">
       <body className="font-sans">{children}</body>
     </html>
   );

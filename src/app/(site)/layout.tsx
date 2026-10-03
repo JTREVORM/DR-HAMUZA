@@ -4,7 +4,7 @@ import { Footer } from '@/components/layout/Footer';
 import { FloatingActions } from '@/components/layout/FloatingActions';
 import { JsonLd } from '@/components/ui/JsonLd';
 import { getSettings } from '@/lib/queries';
-import { localBusinessSchema, personSchema } from '@/lib/seo';
+import { localBusinessSchema, personSchema, websiteSchema } from '@/lib/seo';
 
 /** Public website shell: sticky header, footer and floating contact actions. */
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -12,7 +12,11 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <>
-      <JsonLd data={[localBusinessSchema(settings), personSchema(settings)]} />
+      {/* One entity graph for the whole site: the website, the business and the
+          person, cross-referenced by @id so Google reads them as one thing. */}
+      <JsonLd
+        data={[websiteSchema(settings), localBusinessSchema(settings), personSchema(settings)]}
+      />
 
       <Header settings={settings} />
       <main id="main" className="min-h-screen">

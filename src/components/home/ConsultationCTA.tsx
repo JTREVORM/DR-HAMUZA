@@ -1,15 +1,41 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, MessageCircle, Phone } from 'lucide-react';
 import { Reveal } from '@/components/ui/Reveal';
 import { Logo } from '@/components/ui/Logo';
 import { contactPhones, telHref, whatsappHref } from '@/lib/utils';
 import type { SiteSettings } from '@/lib/types';
 
-export function ConsultationCTA({ settings }: { settings: SiteSettings }) {
+/**
+ * The closing call to action. A still from Dr Salongo Hamuza's own footage sits
+ * behind it, heavily darkened — it should read as atmosphere, not as a picture
+ * competing with the phone number.
+ */
+export function ConsultationCTA({
+  settings,
+  backgroundImage,
+}: {
+  settings: SiteSettings;
+  backgroundImage?: string;
+}) {
   const wa = whatsappHref(settings.whatsapp || settings.phone, settings.whatsapp_message);
 
   return (
-    <section className="relative overflow-hidden bg-forest-900 py-20 lg:py-24">
+    <section className="relative isolate overflow-hidden bg-forest-900 py-20 lg:py-28">
+      {backgroundImage ? (
+        <div aria-hidden className="absolute inset-0 -z-10">
+          <Image
+            src={backgroundImage}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          <span className="absolute inset-0 bg-forest-950/88" />
+          <span className="absolute inset-0 bg-gradient-to-b from-forest-950 via-forest-950/70 to-forest-950" />
+        </div>
+      ) : null}
+
       <div aria-hidden className="pattern-diamond absolute inset-0 opacity-70" />
       <div
         aria-hidden

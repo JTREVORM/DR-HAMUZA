@@ -233,6 +233,13 @@ create table if not exists public.videos (
   duration        text default '',
   category        text default 'General',
   tags            text[] not null default '{}',
+  -- Most of this footage is filmed on a phone, so the player has to know which
+  -- way round a clip is rather than stretching it into a 16:9 box.
+  orientation     text not null default 'portrait' check (orientation in ('portrait','landscape')),
+  -- Plays silently behind the homepage headline. Kept exclusive by the index below.
+  is_hero         boolean not null default false,
+  show_on_homepage boolean not null default true,
+  sort_order      int not null default 0,
   is_published    boolean not null default false,
   is_featured     boolean not null default false,
   seo_title       text default '',
@@ -241,6 +248,34 @@ create table if not exists public.videos (
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
 );
+
+-- Existing installations: add the video columns introduced with the
+-- video-first homepage. Safe to re-run.
+alter table public.videos
+  add column if not exists orientation text not null default 'portrait',
+  add column if not exists is_hero boolean not null default false,
+  add column if not exists show_on_homepage boolean not null default true,
+  add column if not exists sort_order int not null default 0;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'videos_orientation_check'
+  ) then
+    alter table public.videos
+      add constraint videos_orientation_check
+      check (orientation in ('portrait','landscape'));
+  end if;
+end $$;
+
+-- At most one hero video, enforced in the database as well as in the dashboard.
+-- Every row the index covers has is_hero = true, so uniqueness on that column
+-- means exactly one such row can exist.
+create unique index if not exists videos_single_hero
+  on public.videos (is_hero) where is_hero;
+
+create index if not exists videos_homepage_idx
+  on public.videos (show_on_homepage, sort_order) where is_published;
 
 -- ------------------------------------------------------------ testimonials --
 

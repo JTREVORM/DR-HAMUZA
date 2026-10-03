@@ -16,6 +16,17 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Contact', href: '/contact' },
 ];
 
+/**
+ * The cornerstone guides. They are kept out of the main navigation, which is
+ * already full, and surfaced in the footer and from the pages they relate to —
+ * where someone reading about the practice is actually likely to want them.
+ */
+export const GUIDE_ITEMS: NavItem[] = [
+  { label: 'Traditional Healer in Uganda', href: '/traditional-healer-uganda' },
+  { label: 'Traditional Doctor in Uganda', href: '/traditional-doctor-uganda' },
+  { label: 'A Note on Terminology', href: '/witch-doctor-uganda' },
+];
+
 export const LEGAL_ITEMS: NavItem[] = [
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Terms of Use', href: '/terms' },

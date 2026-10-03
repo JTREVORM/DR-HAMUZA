@@ -50,10 +50,11 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   whatsapp_message:
     'Hello Dr Salongo Hamuza, I visited your website and would like to inquire about a consultation.',
   default_seo_title:
-    'Dr Salongo Hamuza | Professional Traditional Healer in Uganda',
+    'Dr Salongo Hamuza | Traditional Healer & Traditional Doctor in Uganda',
   default_seo_description:
-    'Dr Salongo Hamuza is a professional traditional healer from Uganda offering traditional and spiritual consultation for relationship, family, business, career and other personal matters.',
-  default_og_image: '/brand/logo.webp',
+    'Meet Dr Salongo Hamuza, a professional traditional healer from Uganda offering traditional and spiritual consultation for personal, family, relationship, business and other life matters.',
+  // A real photograph shares far better than a logo on a dark square.
+  default_og_image: '/images/dr-salongo-hamuza-traditional-healer-uganda.webp',
   google_site_verification: '',
   google_analytics_id: '',
 };

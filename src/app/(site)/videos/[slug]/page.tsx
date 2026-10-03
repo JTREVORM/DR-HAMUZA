@@ -13,7 +13,14 @@ import { ConsultationCTA } from '@/components/home/ConsultationCTA';
 import { getSettings, getVideoBySlug, getVideos } from '@/lib/queries';
 import { breadcrumbSchema, buildMetadata, videoSchema } from '@/lib/seo';
 import { SITE_URL } from '@/lib/env';
-import { absoluteUrl, formatDate, videoEmbedUrl, videoThumbnail } from '@/lib/utils';
+import {
+  absoluteUrl,
+  formatDate,
+  isSelfHostedVideo,
+  isoDuration,
+  videoEmbedUrl,
+  videoThumbnail,
+} from '@/lib/utils';
 
 export const revalidate = 300;
 
@@ -62,6 +69,7 @@ export default async function VideoDetailPage({
 
   const related = videos.filter((v) => v.id !== video.id).slice(0, 3);
   const thumb = videoThumbnail(video);
+  const selfHosted = isSelfHostedVideo(video);
 
   const crumbs = [
     { name: 'Home', path: '/' },
@@ -75,12 +83,18 @@ export default async function VideoDetailPage({
         data={[
           breadcrumbSchema(crumbs),
           videoSchema({
+            settings,
             name: video.title,
             description:
               video.description || `${video.title} — ${settings.site_name}, ${settings.tagline}.`,
+            pageUrl: `/videos/${video.slug}`,
             thumbnailUrl: thumb ? absoluteUrl(SITE_URL, thumb) : undefined,
             uploadDate: video.published_at || video.created_at,
-            embedUrl: videoEmbedUrl(video),
+            duration: isoDuration(video.duration),
+            // A file we host is `contentUrl`; a provider's player is `embedUrl`.
+            ...(selfHosted
+              ? { contentUrl: absoluteUrl(SITE_URL, video.video_url) }
+              : { embedUrl: videoEmbedUrl(video) }),
           }),
         ]}
       />

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Facebook, Instagram, Mail, MapPin, MessageCircle, Phone, Youtube } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
-import { LEGAL_ITEMS, NAV_ITEMS } from '@/components/layout/nav-items';
+import { GUIDE_ITEMS, LEGAL_ITEMS, NAV_ITEMS } from '@/components/layout/nav-items';
 import { getBlogPosts, getServices, getSettings } from '@/lib/queries';
 import { contactPhones, telHref, whatsappHref } from '@/lib/utils';
 
@@ -88,6 +88,23 @@ export async function Footer() {
             <h2 className="mb-5 font-display text-base text-gold-300">Explore</h2>
             <ul className="space-y-1 text-sm">
               {NAV_ITEMS.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="inline-block py-1.5 transition hover:text-gold-200 hover:underline hover:underline-offset-4"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Guides */}
+          <nav aria-label="Guides to traditional healing" className="lg:col-span-2">
+            <h2 className="mb-5 font-display text-base text-gold-300">Understanding</h2>
+            <ul className="space-y-1 text-sm">
+              {GUIDE_ITEMS.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
